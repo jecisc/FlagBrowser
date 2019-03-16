@@ -1,6 +1,6 @@
 Class {
 	#name : #FBStringFlag,
-	#superclass : #FBAbstractFlag,
+	#superclass : #FBFlag,
 	#category : #'FlagBrowser-Model'
 }
 
