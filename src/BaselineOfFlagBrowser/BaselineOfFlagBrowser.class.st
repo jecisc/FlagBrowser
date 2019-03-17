@@ -1,11 +1,11 @@
 Class {
-	#name : #BaselineOfFlagsBrowser,
+	#name : #BaselineOfFlagBrowser,
 	#superclass : #BaselineOf,
-	#category : #BaselineOfFlagsBrowser
+	#category : #BaselineOfFlagBrowser
 }
 
 { #category : #baselines }
-BaselineOfFlagsBrowser >> baseline: spec [
+BaselineOfFlagBrowser >> baseline: spec [
 	<baseline>
 	spec
 		for: #common
