@@ -9,11 +9,16 @@ Class {
 }
 
 { #category : #accessing }
+FBFlag class >> allFlags [
+	^ self isAbstract ifTrue: [ self allFlagsInSystem ] ifFalse: [ self allInSystem ]
+]
+
+{ #category : #accessing }
 FBFlag class >> allFlagsInSystem [
 	| flagNodes flags |
 	flags := OrderedCollection new.
 	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
-	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes | flags add: ((self flagClassFor: argument) new parameter: argument locations: rbNodes) ].
+	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes | flags add: ((self flagClassFor: argument) parameter: argument locations: rbNodes) ].
 	^ flags
 ]
 
