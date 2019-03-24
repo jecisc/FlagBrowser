@@ -42,11 +42,6 @@ FBByFlagsPagePresenter class >> title [
 	^ 'By flag'
 ]
 
-{ #category : #initialization }
-FBByFlagsPagePresenter >> browseMethodOf: aLocation [
-	^ Smalltalk tools browser openOnMethod: aLocation methodNode method
-]
-
 { #category : #accessing }
 FBByFlagsPagePresenter >> code [
 	^ code
@@ -72,8 +67,8 @@ FBByFlagsPagePresenter >> initializePresenter [
 	locationsTable
 		whenSelectedItemChangedDo: [ :location | 
 			self code
-				text: location methodNode sourceCode;
-				behavior: location methodNode methodClass ].
+				text: location sourceCode;
+				behavior: location classLocation ].
 
 	flagsList
 		whenSelectionChangedDo: [ :selection | 
@@ -105,9 +100,9 @@ FBByFlagsPagePresenter >> initializeWidgets [
 
 	locationsTable
 		activateOnDoubleClick;
-		whenActivatedDo: [ :selection | self browseMethodOf: selection selectedItem ];
-		addColumn: (StringTableColumn title: 'Class' evaluated: [ :location | location methodNode methodClass asString ]);
-		addColumn: (StringTableColumn title: 'Method' evaluated: [ :location | location methodNode selector ]);
+		whenActivatedDo: [ :selection | selection selectedItem openInBrowser ];
+		addColumn: (StringTableColumn title: 'Class' evaluated: #classLocation);
+		addColumn: (StringTableColumn title: 'Method' evaluated: #selector);
 		contextMenu: self tableMenu.
 
 	code aboutToStyle: true
@@ -160,7 +155,7 @@ FBByFlagsPagePresenter >> tableMenu [
 					anItem
 						name: 'Browse';
 						icon: (self iconNamed: #smallFind);
-						action: [ :param | self browseMethodOf: self locationsTable selectedItem ] ] ].
+						action: [ :param | self locationsTable selectedItem openInBrowser ] ] ].
 
 	^ aMenu
 ]

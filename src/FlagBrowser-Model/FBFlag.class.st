@@ -18,7 +18,7 @@ FBFlag class >> allFlagsInSystem [
 	| flagNodes flags |
 	flags := OrderedCollection new.
 	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
-	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes | flags add: ((self flagClassFor: argument) parameter: argument locations: rbNodes) ].
+	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes | flags add: ((self flagClassFor: argument) parameter: argument locations: (self toLocations: rbNodes)) ].
 	^ flags
 ]
 
@@ -30,7 +30,7 @@ FBFlag class >> allInSystem [
 	flags := OrderedCollection new.
 	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
 	(flagNodes groupedBy: [ :node | node arguments first value ])
-		keysAndValuesDo: [ :argument :rbNodes | (FBFlag flagClassFor: argument) = self ifTrue: [ flags add: (self parameter: argument locations: rbNodes) ] ].
+		keysAndValuesDo: [ :argument :rbNodes | (FBFlag flagClassFor: argument) = self ifTrue: [ flags add: (self parameter: argument locations: (self toLocations: rbNodes)) ] ].
 	^ flags
 ]
 
@@ -60,6 +60,15 @@ FBFlag class >> parameter: anArgument locations: aCollectionOfNodes [
 { #category : #accessing }
 FBFlag class >> priority [
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+FBFlag class >> toLocations: aCollectionOfRBNodes [
+	^ aCollectionOfRBNodes
+		collect: [ :node | 
+			| methodNode |
+			methodNode := node methodNode.
+			FBFlagLocation class: methodNode methodClass selector: methodNode selector ]
 ]
 
 { #category : #accessing }
