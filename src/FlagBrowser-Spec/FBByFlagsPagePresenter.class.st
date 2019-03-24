@@ -5,20 +5,24 @@ Class {
 		'selectedMode',
 		'modeDropbox',
 		'flagsList',
-		'locationsTable'
+		'locationsTable',
+		'code'
 	],
 	#category : #'FlagBrowser-Spec'
 }
 
 { #category : #specs }
 FBByFlagsPagePresenter class >> defaultSpec [
-	self flag: #todo. "check problems"
 	^ SpecBoxLayout newVertical
 		add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
 		add:
 			(SpecBoxLayout newHorizontal
-				add: #flagsList" withConstraints: [ :constraints | constraints width: 100 ]";
-				add: #locationsTable;
+				add: #flagsList withConstraints: [ :constraints | constraints width: 250 ];
+				add:
+					(SpecBoxLayout newVertical
+						add: #locationsTable;
+						add: #code;
+						yourself);
 				yourself);
 		yourself
 ]
@@ -39,6 +43,16 @@ FBByFlagsPagePresenter class >> title [
 ]
 
 { #category : #accessing }
+FBByFlagsPagePresenter >> code [
+	^ code
+]
+
+{ #category : #accessing }
+FBByFlagsPagePresenter >> code: anObject [
+	code := anObject
+]
+
+{ #category : #accessing }
 FBByFlagsPagePresenter >> flagsList [
 	^ flagsList
 ]
@@ -50,11 +64,21 @@ FBByFlagsPagePresenter >> flagsList: anObject [
 
 { #category : #initialization }
 FBByFlagsPagePresenter >> initializePresenter [
-	flagsList whenSelectionChangedDo: [ :selection | self locationsTable items: selection selectedItem locations ].
-	
+	locationsTable
+		whenSelectedItemChangedDo: [ :location | 
+			self code
+				text: location methodNode sourceCode;
+				behavior: location methodNode methodClass ].
+
+	flagsList
+		whenSelectionChangedDo: [ :selection | 
+			self locationsTable
+				items: selection selectedItem locations;
+				selectIndex: 1 ].
+
 	modeDropbox
-		whenSelectedItemChanged: [ :mode | self selectedMode: mode ];
-		setSelectedItem: FBSymbolFlag
+		whenSelectedItemChangedDo: [ :mode | self selectedMode: mode ];
+		selectedItem: FBSymbolFlag
 ]
 
 { #category : #initialization }
@@ -62,15 +86,23 @@ FBByFlagsPagePresenter >> initializeWidgets [
 	modeDropbox := self newDropList.
 	flagsList := self newList.
 	locationsTable := self newTable.
+	code := self newCode.
 
 	modeDropbox
 		items: FBFlag withAllSubclasses;
 		displayBlock: [ :class | class title ].
 
-	flagsList displayBlock: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ].
+	flagsList
+		displayBlock: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ];
+		sortingBlock: [ :flag | flag parameter asString ] ascending.
 
-	locationsTable addColumn: (StringTableColumn title: 'Class' evaluated: [ :location | location asString ])	;
-		addColumn: (StringTableColumn title: 'Method' evaluated: [ :location | ])
+	locationsTable
+		activateOnDoubleClick;
+		whenActivatedDo: [ :selection | Smalltalk tools browser openOnMethod: selection selectedItem methodNode method ];
+		addColumn: (StringTableColumn title: 'Class' evaluated: [ :location | location methodNode methodClass asString ]);
+		addColumn: (StringTableColumn title: 'Method' evaluated: [ :location | location methodNode selector ]).
+		
+	code aboutToStyle: true
 ]
 
 { #category : #accessing }

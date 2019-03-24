@@ -14,15 +14,22 @@ FlagBrowser class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #specs }
-FlagBrowser class >> example [
-	<script>
-	self new openWithSpec
+{ #category : #'world menu' }
+FlagBrowser class >> menuCommandOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #'Flags Browser')
+		parent: #'New Tools';
+		order: 20;
+		action: [ self open ];
+		iconName: #breakpoint;
+		help: 'Explore the flags in the system.';
+		withSeparatorAfter 
 ]
 
-{ #category : #api }
-FlagBrowser >> initialExtent [
-	^ (700 @ 500) scaledByDisplayScaleFactor
+{ #category : #specs }
+FlagBrowser class >> open [
+	<script>
+	self new openWithSpec
 ]
 
 { #category : #initialization }
@@ -34,5 +41,6 @@ FlagBrowser >> initializeWidgets [
 
 { #category : #initialization }
 FlagBrowser >> initializeWindow: aWindowPresenter [
-	aWindowPresenter title: 'Flag Browser'
+	aWindowPresenter title: 'Flags Browser'.
+	aWindowPresenter initialExtent: (1000 @ 500) scaledByDisplayScaleFactor
 ]
