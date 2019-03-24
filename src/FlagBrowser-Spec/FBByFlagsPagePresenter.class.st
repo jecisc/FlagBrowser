@@ -42,6 +42,11 @@ FBByFlagsPagePresenter class >> title [
 	^ 'By flag'
 ]
 
+{ #category : #initialization }
+FBByFlagsPagePresenter >> browseMethodOf: aLocation [
+	^ Smalltalk tools browser openOnMethod: aLocation methodNode method
+]
+
 { #category : #accessing }
 FBByFlagsPagePresenter >> code [
 	^ code
@@ -78,7 +83,9 @@ FBByFlagsPagePresenter >> initializePresenter [
 
 	modeDropbox
 		whenSelectedItemChangedDo: [ :mode | self selectedMode: mode ];
-		selectedItem: FBSymbolFlag
+		selectedItem: FBSymbolFlag.
+		
+	code whenTextIsAcceptedDo: [ :text | code behavior compile: text ]
 ]
 
 { #category : #initialization }
@@ -98,10 +105,11 @@ FBByFlagsPagePresenter >> initializeWidgets [
 
 	locationsTable
 		activateOnDoubleClick;
-		whenActivatedDo: [ :selection | Smalltalk tools browser openOnMethod: selection selectedItem methodNode method ];
+		whenActivatedDo: [ :selection | self browseMethodOf: selection selectedItem ];
 		addColumn: (StringTableColumn title: 'Class' evaluated: [ :location | location methodNode methodClass asString ]);
-		addColumn: (StringTableColumn title: 'Method' evaluated: [ :location | location methodNode selector ]).
-		
+		addColumn: (StringTableColumn title: 'Method' evaluated: [ :location | location methodNode selector ]);
+		contextMenu: self tableMenu.
+
 	code aboutToStyle: true
 ]
 
@@ -138,4 +146,21 @@ FBByFlagsPagePresenter >> selectedMode: anObject [
 			list
 				items: selectedMode allFlags;
 				selectIndex: 1 ]
+]
+
+{ #category : #initialization }
+FBByFlagsPagePresenter >> tableMenu [
+	| aMenu |
+	aMenu := MenuPresenter new.
+
+	aMenu
+		addGroup: [ :aGroup | 
+			aGroup
+				addItem: [ :anItem | 
+					anItem
+						name: 'Browse';
+						icon: (self iconNamed: #smallFind);
+						action: [ :param | self browseMethodOf: self locationsTable selectedItem ] ] ].
+
+	^ aMenu
 ]
