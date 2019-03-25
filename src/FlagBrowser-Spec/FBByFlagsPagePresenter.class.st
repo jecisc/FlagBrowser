@@ -1,12 +1,27 @@
+"
+Description
+--------------------
+
+I am a page presenter to show the flags grouped by their parameters. 
+
+The user will need to select a flag parameter and see all the locations with this parameter.
+
+I will show different mode to browse the flags depending on the kin of their parameter. (Symbol, String, Object, Anyone)
+ 
+Internal Representation and Key Implementation Points.
+--------------------
+
+    Instance Variables
+	flagsList:		<aListPresenter>		A list displaying the differents parameters possible.
+	modeDropbox:		<aDropListPresenter>	A drop list to select the parameter kinds to show.
+
+"
 Class {
 	#name : #FBByFlagsPagePresenter,
 	#superclass : #FBPagePresenter,
 	#instVars : [
-		'selectedMode',
 		'modeDropbox',
-		'flagsList',
-		'locationsTable',
-		'code'
+		'flagsList'
 	],
 	#category : #'FlagBrowser-Spec'
 }
@@ -16,10 +31,11 @@ FBByFlagsPagePresenter class >> defaultSpec [
 	^ SpecBoxLayout newVertical
 		add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
 		add:
-			(SpecBoxLayout newHorizontal
-				add: #flagsList withConstraints: [ :constraints | constraints width: 250 ];
+			(SpecPanedLayout newHorizontal
+				position: 250;
+				add: #flagsList;
 				add:
-					(SpecBoxLayout newVertical
+					(SpecPanedLayout newVertical
 						add: #locationsTable;
 						add: #code;
 						yourself);
@@ -43,16 +59,6 @@ FBByFlagsPagePresenter class >> title [
 ]
 
 { #category : #accessing }
-FBByFlagsPagePresenter >> code [
-	^ code
-]
-
-{ #category : #accessing }
-FBByFlagsPagePresenter >> code: anObject [
-	code := anObject
-]
-
-{ #category : #accessing }
 FBByFlagsPagePresenter >> flagsList [
 	^ flagsList
 ]
@@ -64,11 +70,7 @@ FBByFlagsPagePresenter >> flagsList: anObject [
 
 { #category : #initialization }
 FBByFlagsPagePresenter >> initializePresenter [
-	locationsTable
-		whenSelectedItemChangedDo: [ :location | 
-			self code
-				text: location sourceCode;
-				behavior: location classLocation ].
+	super initializePresenter.
 
 	flagsList
 		whenSelectionChangedDo: [ :selection | 
@@ -77,18 +79,18 @@ FBByFlagsPagePresenter >> initializePresenter [
 				selectIndex: 1 ].
 
 	modeDropbox
-		whenSelectedItemChangedDo: [ :mode | self selectedMode: mode ];
-		selectedItem: FBSymbolFlag.
-		
-	code whenTextIsAcceptedDo: [ :text | code behavior compile: text ]
+		whenSelectedItemChangedDo: [ :mode | 
+			self flagsList
+				items: mode allFlags;
+				selectIndex: 1 ];
+		selectedItem: FBSymbolFlag
 ]
 
 { #category : #initialization }
 FBByFlagsPagePresenter >> initializeWidgets [
+	super initializeWidgets.
 	modeDropbox := self newDropList.
 	flagsList := self newList.
-	locationsTable := self newTable.
-	code := self newCode.
 
 	modeDropbox
 		items: FBFlag withAllSubclasses;
@@ -99,23 +101,8 @@ FBByFlagsPagePresenter >> initializeWidgets [
 		sortingBlock: [ :flag | flag parameter asString ] ascending.
 
 	locationsTable
-		activateOnDoubleClick;
-		whenActivatedDo: [ :selection | selection selectedItem openInBrowser ];
 		addColumn: (StringTableColumn title: 'Class' evaluated: #classLocation);
-		addColumn: (StringTableColumn title: 'Method' evaluated: #selector);
-		contextMenu: self tableMenu.
-
-	code aboutToStyle: true
-]
-
-{ #category : #accessing }
-FBByFlagsPagePresenter >> locationsTable [
-	^ locationsTable
-]
-
-{ #category : #accessing }
-FBByFlagsPagePresenter >> locationsTable: anObject [
-	locationsTable := anObject
+		addColumn: (StringTableColumn title: 'Method' evaluated: #selector)
 ]
 
 { #category : #accessing }
@@ -126,36 +113,4 @@ FBByFlagsPagePresenter >> modeDropbox [
 { #category : #accessing }
 FBByFlagsPagePresenter >> modeDropbox: anObject [
 	modeDropbox := anObject
-]
-
-{ #category : #accessing }
-FBByFlagsPagePresenter >> selectedMode [
-	^ selectedMode
-]
-
-{ #category : #accessing }
-FBByFlagsPagePresenter >> selectedMode: anObject [
-	selectedMode := anObject.
-	self flagsList
-		ifNotNil: [ :list | 
-			list
-				items: selectedMode allFlags;
-				selectIndex: 1 ]
-]
-
-{ #category : #initialization }
-FBByFlagsPagePresenter >> tableMenu [
-	| aMenu |
-	aMenu := MenuPresenter new.
-
-	aMenu
-		addGroup: [ :aGroup | 
-			aGroup
-				addItem: [ :anItem | 
-					anItem
-						name: 'Browse';
-						icon: (self iconNamed: #smallFind);
-						action: [ :param | self locationsTable selectedItem openInBrowser ] ] ].
-
-	^ aMenu
 ]
