@@ -11,6 +11,5 @@ BaselineOfFlagBrowser >> baseline: spec [
 		for: #common
 		do: [ spec
 				package: 'FlagBrowser-Model';
-				package: 'FlagBrowser-Presentation' with: [ spec requires: #('FlagBrowser-Model') ];
-				package: 'FlagBrowser-Spec' with: [ spec requires: #('FlagBrowser-Presentation') ] ]
+				package: 'FlagBrowser-Spec' with: [ spec requires: #('FlagBrowser-Model') ] ]
 ]

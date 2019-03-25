@@ -1,6 +1,6 @@
 Extension { #name : #FBSymbolFlag }
 
-{ #category : #'*FlagBrowser-Presentation' }
+{ #category : #'*FlagBrowser-Spec' }
 FBSymbolFlag class >> title [
 	^ 'Symbol flags'
 ]
