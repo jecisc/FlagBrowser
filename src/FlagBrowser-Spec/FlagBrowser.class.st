@@ -8,7 +8,7 @@ I can organize them in different ways such as flags by flags parameters, flags b
 "
 Class {
 	#name : #FlagBrowser,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'tabs'
 	],
@@ -17,7 +17,7 @@ Class {
 
 { #category : #specs }
 FlagBrowser class >> defaultSpec [
-	^ SpecBoxLayout newVertical
+	^ SpBoxLayout newVertical
 		add: #tabs;
 		yourself
 ]
@@ -44,11 +44,13 @@ FlagBrowser class >> open [
 FlagBrowser >> initializeWidgets [
 	tabs := self newNotebook.
 
-	FBPagePresenter allPages do: [ :aPage | tabs addPage: (NotebookPage title: aPage title icon: (self iconNamed: aPage icon) provider: [ self instantiate: aPage ]) ]
+	FBPagePresenter allPages
+		do: [ :aPage | tabs addPage: (SpNotebookPage title: aPage title icon: (self iconNamed: aPage icon) provider: [ self instantiate: aPage ]) ]
 ]
 
 { #category : #initialization }
 FlagBrowser >> initializeWindow: aWindowPresenter [
+	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Flags Browser'.
 	aWindowPresenter initialExtent: (1000 @ 500) scaledByDisplayScaleFactor
 ]

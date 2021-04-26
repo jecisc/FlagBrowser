@@ -21,25 +21,27 @@ Class {
 	#superclass : #FBPagePresenter,
 	#instVars : [
 		'modeDropbox',
-		'flagsList'
+		'flagsList',
+		'caseCheckbox'
 	],
 	#category : #'FlagBrowser-Spec'
 }
 
 { #category : #specs }
 FBByFlagsPagePresenter class >> defaultSpec [
-	^ SpecBoxLayout newVertical
+	^ SpBoxLayout newVertical
 		add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
 		add:
-			(SpecPanedLayout newHorizontal
+			(SpPanedLayout newHorizontal
 				position: 250;
 				add: #flagsList;
 				add:
-					(SpecPanedLayout newVertical
+					(SpPanedLayout newVertical
 						add: #locationsTable;
 						add: #code;
 						yourself);
 				yourself);
+		add: #caseCheckbox withConstraints: [ :constraints | constraints height: 20 ];
 		yourself
 ]
 
@@ -59,6 +61,16 @@ FBByFlagsPagePresenter class >> title [
 ]
 
 { #category : #accessing }
+FBByFlagsPagePresenter >> caseCheckbox [
+	^ caseCheckbox
+]
+
+{ #category : #accessing }
+FBByFlagsPagePresenter >> caseCheckbox: anObject [
+	caseCheckbox := anObject
+]
+
+{ #category : #accessing }
 FBByFlagsPagePresenter >> flagsList [
 	^ flagsList
 ]
@@ -72,18 +84,13 @@ FBByFlagsPagePresenter >> flagsList: anObject [
 FBByFlagsPagePresenter >> initializePresenter [
 	super initializePresenter.
 
-	flagsList
-		whenSelectionChangedDo: [ :selection | 
-			self locationsTable
-				items: selection selectedItem locations;
-				selectIndex: 1 ].
-
-	modeDropbox
-		whenSelectedItemChangedDo: [ :mode | 
-			self flagsList
-				items: mode allFlags;
-				selectIndex: 1 ];
-		selectedItem: FBSymbolFlag
+	flagsList transmitTo: locationsTable transform: #locations postTransmission: [ :destination | destination selectIndex: 1 ].
+	modeDropbox transmitTo: flagsList transform: #allFlags postTransmission: [ :destination | destination selectIndex: 1 ].
+	modeDropbox selectItem: FBSymbolFlag.
+	caseCheckbox
+		whenChangedDo: [ :value | 
+			FBFlag caseSensitive: value.
+			modeDropbox selectedItem: modeDropbox selectedItem	"Used to refresh the list" ]
 ]
 
 { #category : #initialization }
@@ -91,18 +98,19 @@ FBByFlagsPagePresenter >> initializeWidgets [
 	super initializeWidgets.
 	modeDropbox := self newDropList.
 	flagsList := self newList.
-
+	caseCheckbox := self newCheckBox.
 	modeDropbox
 		items: FBFlag withAllSubclasses;
-		displayBlock: [ :class | class title ].
-
+		display: [ :class | class title ].
 	flagsList
-		displayBlock: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ];
+		display: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ];
 		sortingBlock: [ :flag | flag parameter asString ] ascending.
-
 	locationsTable
-		addColumn: (StringTableColumn title: 'Class' evaluated: #classLocation);
-		addColumn: (StringTableColumn title: 'Method' evaluated: #selector)
+		addColumn: (SpStringTableColumn title: 'Class' evaluated: #classLocation);
+		addColumn: (SpStringTableColumn title: 'Method' evaluated: #selector).
+	caseCheckbox
+		label: 'Case sensitive';
+		state: FBFlag caseSensitive
 ]
 
 { #category : #accessing }

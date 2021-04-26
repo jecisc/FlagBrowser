@@ -22,11 +22,11 @@ Class {
 
 { #category : #specs }
 FBByScopePagePresenter class >> defaultSpec [
-	^ SpecPanedLayout newHorizontal
+	^ SpPanedLayout newHorizontal
 		position: 250;
 		add: #scopesList;
 		add:
-			(SpecPanedLayout newVertical
+			(SpPanedLayout newVertical
 				add: #locationsTable;
 				add: #code;
 				yourself);
@@ -44,11 +44,9 @@ FBByScopePagePresenter >> initializePresenter [
 	super initializePresenter.
 	locationsByScope := (FBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 
+	scopesList transmitTo: locationsTable transform: [ :scope | locationsByScope at: scope ] postTransmission: [ :destination | destination selectIndex: 1 ].
+
 	scopesList
-		whenSelectionChangedDo: [ :selection | 
-			locationsTable
-				items: (locationsByScope at: selection selectedItem);
-				selectIndex: 1 ];
 		items: locationsByScope keys;
 		selectIndex: 1
 ]
@@ -57,8 +55,12 @@ FBByScopePagePresenter >> initializePresenter [
 FBByScopePagePresenter >> initializeWidgets [
 	super initializeWidgets.
 	scopesList := self newList.
-
 	scopesList
-		displayBlock: #name;
+		display: #name;
 		sortingBlock: #name ascending
+]
+
+{ #category : #initialization }
+FBByScopePagePresenter >> scopeSelector [
+	^ self subclassResponsibility
 ]

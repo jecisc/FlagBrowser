@@ -16,7 +16,7 @@ Internal Representation and Key Implementation Points.
 "
 Class {
 	#name : #FBPagePresenter,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'code',
 		'locationsTable'
@@ -57,8 +57,8 @@ FBPagePresenter >> code: anObject [
 { #category : #initialization }
 FBPagePresenter >> initializePresenter [
 	code whenTextIsAcceptedDo: [ :text | code behavior compile: text ].
-	
-	locationsTable whenSelectedItemChangedDo: [ :location | self selectLocation: location ]
+
+	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ]
 ]
 
 { #category : #initialization }
@@ -72,7 +72,7 @@ FBPagePresenter >> initializeWidgets [
 		whenActivatedDo: [ :selection | selection selectedItem openInBrowser ];
 		contextMenu: self tableMenu.
 
-	code aboutToStyle: true
+	code syntaxHighlight: true
 ]
 
 { #category : #accessing }
@@ -90,7 +90,7 @@ FBPagePresenter >> selectLocation: location [
 	^ self code
 		text: location sourceCode;
 		behavior: location classLocation;
-		setSelection: location interval
+		selectionInterval: location interval
 ]
 
 { #category : #initialization }
