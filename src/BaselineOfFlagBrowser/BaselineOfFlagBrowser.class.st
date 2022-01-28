@@ -8,10 +8,7 @@ Class {
 BaselineOfFlagBrowser >> baseline: spec [
 
 	<baseline>
-	spec for: #common do: [ 
-		spec
-			package: 'FlagBrowser-Model';
-			package: 'FlagBrowser-Spec' with: [ spec requires: #( 'FlagBrowser-Model' ) ] ].
+	spec for: #common do: [ spec package: 'FlagBrowser-Model' ].
 
 	spec for: #'pharo8.x' do: [ spec package: 'FlagBrowser-Spec-Pharo8' with: [ spec requires: #( 'FlagBrowser-Model' ) ] ].
 
