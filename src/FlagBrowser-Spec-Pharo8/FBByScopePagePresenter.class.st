@@ -17,7 +17,7 @@ Class {
 	#instVars : [
 		'scopesList'
 	],
-	#category : #'FlagBrowser-Spec'
+	#category : #'FlagBrowser-Spec-Pharo8-FlagBrowser-Spec-Pharo8'
 }
 
 { #category : #specs }

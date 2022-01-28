@@ -7,7 +7,7 @@ I am a presenter showing the flags in packages.
 Class {
 	#name : #FBByPackagesPagePresenter,
 	#superclass : #FBByScopePagePresenter,
-	#category : #'FlagBrowser-Spec'
+	#category : #'FlagBrowser-Spec-Pharo8-FlagBrowser-Spec-Pharo8'
 }
 
 { #category : #specs }
