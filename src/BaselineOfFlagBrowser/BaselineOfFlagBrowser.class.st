@@ -15,7 +15,7 @@ BaselineOfFlagBrowser >> baseline: spec [
 
 	spec for: #'pharo8.x' do: [ spec package: 'FlagBrowser-Spec-Pharo8' with: [ spec requires: #( 'FlagBrowser-Model' ) ] ].
 
-	"spec for: (self pharoVersionsFrom: 9) do: [ spec package: 'FlagBrowser-Spec-Pharo9' with: [ spec requires: #( 'FlagBrowser-Model' ) ] ]"
+	spec for: (self pharoVersionsFrom: 9) do: [ spec package: 'FlagBrowser-Spec-Pharo9' with: [ spec requires: #( 'FlagBrowser-Model' ) ] ]
 ]
 
 { #category : #baselines }
