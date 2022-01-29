@@ -29,20 +29,19 @@ Class {
 
 { #category : #specs }
 FBByFlagsPagePresenter class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
-		add:
-			(SpPanedLayout newHorizontal
-				position: 250;
-				add: #flagsList;
-				add:
-					(SpPanedLayout newVertical
-						add: #locationsTable;
-						add: #code;
-						yourself);
-				yourself);
-		add: #caseCheckbox withConstraints: [ :constraints | constraints height: 20 ];
-		yourself
+		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 250;
+				   add: #flagsList;
+				   add: (SpPanedLayout newVertical
+						    add: #locationsTable;
+						    add: #code;
+						    yourself);
+				   yourself);
+		  add: #caseCheckbox withConstraints: [ :constraints | constraints height: 20 ];
+		  yourself
 ]
 
 { #category : #specs }
@@ -84,13 +83,14 @@ FBByFlagsPagePresenter >> flagsList: anObject [
 FBByFlagsPagePresenter >> initializePresenter [
 	super initializePresenter.
 
-	flagsList transmitTo: locationsTable transform: #locations postTransmission: [ :destination | destination selectIndex: 1 ].
-	modeDropbox transmitTo: flagsList transform: #allFlags postTransmission: [ :destination | destination selectIndex: 1 ].
+	flagsList transmitTo: locationsTable transform: [ :item | item ifNotNil: #locations ifNil: [ #() ] ]  postTransmission: [ :destination | destination selectIndex: 1 ].
+	modeDropbox transmitTo: flagsList transform: [ :item | item model allFlags ] postTransmission: [ :destination | destination selectIndex: 1 ].
+
 	modeDropbox selectItem: FBSymbolFlag.
 	caseCheckbox
 		whenChangedDo: [ :value | 
 			FBFlag caseSensitive: value.
-			modeDropbox selectedItem: modeDropbox selectedItem	"Used to refresh the list" ]
+			modeDropbox selectItem: modeDropbox selectedItem	"Used to refresh the list" ]
 ]
 
 { #category : #initialization }

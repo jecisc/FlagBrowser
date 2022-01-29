@@ -56,7 +56,7 @@ FBPagePresenter >> code: anObject [
 
 { #category : #initialization }
 FBPagePresenter >> initializePresenter [
-	code whenTextIsAcceptedDo: [ :text | code behavior compile: text ].
+	code whenSubmitDo: [ :text | code behavior compile: text ].
 
 	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ]
 ]
@@ -87,6 +87,8 @@ FBPagePresenter >> locationsTable: anObject [
 
 { #category : #initialization }
 FBPagePresenter >> selectLocation: location [
+	location ifNil: [ ^ self code ].
+
 	^ self code
 		text: location sourceCode;
 		behavior: location classLocation;
@@ -96,7 +98,7 @@ FBPagePresenter >> selectLocation: location [
 { #category : #initialization }
 FBPagePresenter >> tableMenu [
 	| aMenu |
-	aMenu := MenuPresenter new.
+	aMenu := SpMenuPresenter new.
 
 	aMenu
 		addGroup: [ :aGroup | 

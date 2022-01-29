@@ -22,15 +22,15 @@ Class {
 
 { #category : #specs }
 FBByScopePagePresenter class >> defaultSpec [
+
 	^ SpPanedLayout newHorizontal
-		position: 250;
-		add: #scopesList;
-		add:
-			(SpPanedLayout newVertical
-				add: #locationsTable;
-				add: #code;
-				yourself);
-		yourself
+		  positionOfSlider: 250;
+		  add: #scopesList;
+		  add: (SpPanedLayout newVertical
+				   add: #locationsTable;
+				   add: #code;
+				   yourself);
+		  yourself
 ]
 
 { #category : #testing }
@@ -44,7 +44,7 @@ FBByScopePagePresenter >> initializePresenter [
 	super initializePresenter.
 	locationsByScope := (FBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 
-	scopesList transmitTo: locationsTable transform: [ :scope | locationsByScope at: scope ] postTransmission: [ :destination | destination selectIndex: 1 ].
+	scopesList transmitTo: locationsTable transform: [ :scope | scope ifNotNil: [ locationsByScope at: scope ] ifNil: [ #() ] ] postTransmission: [ :destination | destination selectIndex: 1 ].
 
 	scopesList
 		items: locationsByScope keys;
