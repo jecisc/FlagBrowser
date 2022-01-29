@@ -96,7 +96,7 @@ FBPagePresenter >> selectLocation: location [
 { #category : #initialization }
 FBPagePresenter >> tableMenu [
 	| aMenu |
-	aMenu := MenuPresenter new.
+	aMenu := SpMenuPresenter new.
 
 	aMenu
 		addGroup: [ :aGroup | 
