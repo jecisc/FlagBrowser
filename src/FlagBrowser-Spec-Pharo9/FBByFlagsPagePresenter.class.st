@@ -28,8 +28,25 @@ Class {
 }
 
 { #category : #specs }
-FBByFlagsPagePresenter class >> defaultSpec [
+FBByFlagsPagePresenter class >> defaultLayout [
 
+	^ SpBoxLayout newVertical
+		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 250;
+				   add: #flagsList;
+				   add: (SpPanedLayout newVertical
+						    add: #locationsTable;
+						    add: #code;
+						    yourself);
+				   yourself);
+		  add: #caseCheckbox withConstraints: [ :constraints | constraints height: 20 ];
+		  yourself
+]
+
+{ #category : #specs }
+FBByFlagsPagePresenter class >> defaultSpec [
+	self flag: #pharo11.
 	^ SpBoxLayout newVertical
 		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
 		  add: (SpPanedLayout newHorizontal

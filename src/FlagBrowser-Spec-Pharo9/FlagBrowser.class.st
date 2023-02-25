@@ -16,7 +16,15 @@ Class {
 }
 
 { #category : #specs }
+FlagBrowser class >> defaultLayout [
+	^ SpBoxLayout newVertical
+		add: #tabs;
+		yourself
+]
+
+{ #category : #specs }
 FlagBrowser class >> defaultSpec [
+	self flag: #pharo11.
 	^ SpBoxLayout newVertical
 		add: #tabs;
 		yourself
@@ -36,8 +44,12 @@ FlagBrowser class >> menuCommandOn: aBuilder [
 
 { #category : #specs }
 FlagBrowser class >> open [
+
 	<script>
-	self new openWithSpec
+	self flag: #pharo11.
+	SystemVersion current major < 11
+		ifTrue: [ self new openWithSpec ]
+		ifFalse: [ self new open ]
 ]
 
 { #category : #initialization }

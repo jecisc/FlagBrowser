@@ -21,8 +21,21 @@ Class {
 }
 
 { #category : #specs }
-FBByScopePagePresenter class >> defaultSpec [
+FBByScopePagePresenter class >> defaultLayout [
 
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 250;
+		  add: #scopesList;
+		  add: (SpPanedLayout newVertical
+				   add: #locationsTable;
+				   add: #code;
+				   yourself);
+		  yourself
+]
+
+{ #category : #specs }
+FBByScopePagePresenter class >> defaultSpec [
+	self flag: #pharo11.
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 250;
 		  add: #scopesList;
