@@ -87,12 +87,13 @@ FBPagePresenter >> locationsTable: anObject [
 
 { #category : #initialization }
 FBPagePresenter >> selectLocation: location [
+
 	location ifNil: [ ^ self code ].
 
 	^ self code
-		text: location sourceCode;
-		behavior: location classLocation;
-		selectionInterval: location interval
+		  text: location sourceCode;
+		  beForMethod: location compiledMethod;
+		  selectionInterval: location interval
 ]
 
 { #category : #initialization }
