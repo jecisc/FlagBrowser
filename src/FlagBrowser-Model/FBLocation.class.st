@@ -90,7 +90,13 @@ FBLocation >> interval: anObject [
 
 { #category : #accessing }
 FBLocation >> package [
-	^ self classLocation package
+	^ self compiledMethod package
+]
+
+{ #category : #accessing }
+FBLocation >> packageName [
+
+	^ self package name
 ]
 
 { #category : #accessing }

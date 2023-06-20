@@ -112,6 +112,7 @@ FBByFlagsPagePresenter >> initializePresenter [
 
 { #category : #initialization }
 FBByFlagsPagePresenter >> initializeWidgets [
+
 	super initializeWidgets.
 	modeDropbox := self newDropList.
 	flagsList := self newList.
@@ -123,8 +124,15 @@ FBByFlagsPagePresenter >> initializeWidgets [
 		display: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ];
 		sortingBlock: [ :flag | flag parameter asString ] ascending.
 	locationsTable
-		addColumn: (SpStringTableColumn title: 'Class' evaluated: #classLocation);
-		addColumn: (SpStringTableColumn title: 'Method' evaluated: #selector).
+		addColumn: ((SpStringTableColumn title: 'Package' evaluated: #packageName)
+				 beSortable;
+				 yourself);
+		addColumn: ((SpStringTableColumn title: 'Class' evaluated: #classLocation)
+				 beSortable;
+				 yourself);
+		addColumn: ((SpStringTableColumn title: 'Method' evaluated: #selector)
+				 beSortable;
+				 yourself).
 	caseCheckbox
 		label: 'Case sensitive';
 		state: FBFlag caseSensitive
