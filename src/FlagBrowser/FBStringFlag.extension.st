@@ -1,6 +1,6 @@
 Extension { #name : 'FBStringFlag' }
 
-{ #category : '*FlagBrowser-Spec-Pharo9' }
+{ #category : '*FlagBrowser-UI' }
 FBStringFlag class >> title [
 	^ 'String flags'
 ]

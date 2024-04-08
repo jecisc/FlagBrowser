@@ -5,22 +5,29 @@ Description
 I represent a flag which parameter is a Symbol.
 "
 Class {
-	#name : #FBSymbolFlag,
-	#superclass : #FBFlag,
-	#category : #'FlagBrowser-Model'
+	#name : 'FBSymbolFlag',
+	#superclass : 'FBFlag',
+	#category : 'FlagBrowser-Model',
+	#package : 'FlagBrowser',
+	#tag : 'Model'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 FBSymbolFlag class >> matchesArgument: aFlagArgument [
 	^ aFlagArgument isSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBSymbolFlag class >> priority [
 	^ 20
 ]
 
-{ #category : #accessing }
+{ #category : '*FlagBrowser-UI' }
+FBSymbolFlag class >> title [
+	^ 'Symbol flags'
+]
+
+{ #category : 'accessing' }
 FBSymbolFlag >> insensitiveParameter [
 	self parameter: self parameter asLowercase capitalized asSymbol
 ]

@@ -21,8 +21,9 @@ Class {
 		'code',
 		'locationsTable'
 	],
-	#category : 'FlagBrowser-Spec-Pharo9',
-	#package : 'FlagBrowser-Spec-Pharo9'
+	#category : 'FlagBrowser-UI',
+	#package : 'FlagBrowser',
+	#tag : 'UI'
 }
 
 { #category : 'accessing' }

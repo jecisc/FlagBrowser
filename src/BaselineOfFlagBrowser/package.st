@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfFlagBrowser }
+Package { #name : 'BaselineOfFlagBrowser' }

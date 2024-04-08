@@ -7,22 +7,32 @@ I am a browser allowing one to browse the flags in the system.
 I can organize them in different ways such as flags by flags parameters, flags by class or flags by packages.
 "
 Class {
-	#name : #FlagBrowser,
-	#superclass : #SpPresenter,
+	#name : 'FlagBrowser',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'tabs'
 	],
-	#category : #'FlagBrowser-Spec-Pharo8-FlagBrowser-Spec-Pharo8'
+	#category : 'FlagBrowser-UI',
+	#package : 'FlagBrowser',
+	#tag : 'UI'
 }
 
-{ #category : #specs }
-FlagBrowser class >> defaultSpec [
+{ #category : 'specs' }
+FlagBrowser class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #tabs;
 		yourself
 ]
 
-{ #category : #'world menu' }
+{ #category : 'specs' }
+FlagBrowser class >> defaultSpec [
+	self flag: #pharo11.
+	^ SpBoxLayout newVertical
+		add: #tabs;
+		yourself
+]
+
+{ #category : 'world menu' }
 FlagBrowser class >> menuCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Flags Browser')
@@ -34,13 +44,23 @@ FlagBrowser class >> menuCommandOn: aBuilder [
 		withSeparatorAfter 
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 FlagBrowser class >> open [
+
 	<script>
-	self new openWithSpec
+	self flag: #pharo11.
+	SystemVersion current major < 11
+		ifTrue: [ self new openWithSpec ]
+		ifFalse: [ self new open ]
 ]
 
-{ #category : #initialization }
+{ #category : 'icons' }
+FlagBrowser class >> taskbarIconName [
+
+	^ #breakpoint
+]
+
+{ #category : 'initialization' }
 FlagBrowser >> initializeWidgets [
 	tabs := self newNotebook.
 
@@ -48,7 +68,7 @@ FlagBrowser >> initializeWidgets [
 		do: [ :aPage | tabs addPage: (SpNotebookPage title: aPage title icon: (self iconNamed: aPage icon) provider: [ self instantiate: aPage ]) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 FlagBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Flags Browser'.
