@@ -8,3 +8,12 @@ The flag browser is divided into 3 tabs:
 - Browse flags: In this mode it is possible to distinguish flags by the type of their argument: Symbols, Strings, other objects.
 - Browse flags by packages
 - Browse flags by classes
+
+## How to install it
+
+```smalltalk
+Metacello new
+	baseline: 'FlagBrowser';
+	repository: 'github://jecisc/FlagBrowser/src';
+	load ].
+```
