@@ -7,7 +7,7 @@ I am a browser allowing one to browse the flags in the system.
 I can organize them in different ways such as flags by flags parameters, flags by class or flags by packages.
 "
 Class {
-	#name : 'FlagBrowser',
+	#name : 'StFlagBrowser',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'tabs'
@@ -18,14 +18,14 @@ Class {
 }
 
 { #category : 'specs' }
-FlagBrowser class >> defaultLayout [
+StFlagBrowser class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		add: #tabs;
 		yourself
 ]
 
 { #category : 'specs' }
-FlagBrowser class >> defaultSpec [
+StFlagBrowser class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpBoxLayout newVertical
 		add: #tabs;
@@ -33,7 +33,7 @@ FlagBrowser class >> defaultSpec [
 ]
 
 { #category : 'world menu' }
-FlagBrowser class >> menuCommandOn: aBuilder [
+StFlagBrowser class >> menuCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Flags Browser')
 		parent: #'New Tools';
@@ -45,7 +45,7 @@ FlagBrowser class >> menuCommandOn: aBuilder [
 ]
 
 { #category : 'specs' }
-FlagBrowser class >> open [
+StFlagBrowser class >> open [
 
 	<script>
 	self flag: #pharo11.
@@ -55,21 +55,21 @@ FlagBrowser class >> open [
 ]
 
 { #category : 'icons' }
-FlagBrowser class >> taskbarIconName [
+StFlagBrowser class >> taskbarIconName [
 
 	^ #breakpoint
 ]
 
 { #category : 'initialization' }
-FlagBrowser >> initializeWidgets [
+StFlagBrowser >> initializeWidgets [
 	tabs := self newNotebook.
 
-	FBPagePresenter allPages
+	StFBPagePresenter allPages
 		do: [ :aPage | tabs addPage: (SpNotebookPage title: aPage title icon: (self iconNamed: aPage icon) provider: [ self instantiate: aPage ]) ]
 ]
 
 { #category : 'initialization' }
-FlagBrowser >> initializeWindow: aWindowPresenter [
+StFlagBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Flags Browser'.
 	aWindowPresenter initialExtent: (1000 @ 500) scaledByDisplayScaleFactor

@@ -17,7 +17,7 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : 'FBFlag',
+	#name : 'StFBFlag',
 	#superclass : 'Object',
 	#instVars : [
 		'parameter',
@@ -32,7 +32,7 @@ Class {
 }
 
 { #category : 'accessing' }
-FBFlag class >> addNew: aClass for: argument with: rbNodes in: flags [
+StFBFlag class >> addNew: aClass for: argument with: rbNodes in: flags [
 	self caseSensitive
 		ifFalse: [ | insensitiveArgument |
 			insensitiveArgument := argument asString asLowercase.
@@ -47,12 +47,12 @@ FBFlag class >> addNew: aClass for: argument with: rbNodes in: flags [
 ]
 
 { #category : 'accessing' }
-FBFlag class >> allFlags [
+StFBFlag class >> allFlags [
 	^ self isAbstract ifTrue: [ self allFlagsInSystem ] ifFalse: [ self allInSystem ]
 ]
 
 { #category : 'accessing' }
-FBFlag class >> allFlagsInSystem [
+StFBFlag class >> allFlagsInSystem [
 	| flagNodes flags |
 	flags := OrderedCollection new.
 	flagNodes := #flag: senders
@@ -68,7 +68,7 @@ FBFlag class >> allFlagsInSystem [
 ]
 
 { #category : 'accessing' }
-FBFlag class >> allInSystem [
+StFBFlag class >> allInSystem [
 	| flagNodes flags |
 	self isAbstract ifTrue: [ ^ self error: 'This method can be called only on concrete classes.' ].
 
@@ -77,7 +77,7 @@ FBFlag class >> allInSystem [
 		flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
 	(flagNodes groupedBy: [ :node | node arguments first value ])
 		keysAndValuesDo: [ :argument :rbNodes | 
-			(FBFlag flagClassFor: argument) = self
+			(StFBFlag flagClassFor: argument) = self
 				ifTrue: [ self
 						addNew: self
 						for: argument
@@ -87,32 +87,32 @@ FBFlag class >> allInSystem [
 ]
 
 { #category : 'accessing' }
-FBFlag class >> caseSensitive [
+StFBFlag class >> caseSensitive [
 	^ CaseSensitive ifNil: [ CaseSensitive := true ]
 ]
 
 { #category : 'accessing' }
-FBFlag class >> caseSensitive: anObject [
+StFBFlag class >> caseSensitive: anObject [
 	CaseSensitive := anObject
 ]
 
 { #category : 'accessing' }
-FBFlag class >> flagClassFor: aFlagArgument [
+StFBFlag class >> flagClassFor: aFlagArgument [
 	^ (self allSubclasses sorted: #priority descending) detect: [ :subclass | subclass matchesArgument: aFlagArgument ]
 ]
 
 { #category : 'testing' }
-FBFlag class >> isAbstract [
-	^ self = FBFlag
+StFBFlag class >> isAbstract [
+	^ self = StFBFlag
 ]
 
 { #category : 'testing' }
-FBFlag class >> matchesArgument: aFlagArgument [
+StFBFlag class >> matchesArgument: aFlagArgument [
 	^ self subclassResponsibility
 ]
 
 { #category : 'instance creation' }
-FBFlag class >> parameter: anArgument locations: aCollectionOfNodes [
+StFBFlag class >> parameter: anArgument locations: aCollectionOfNodes [
 	^ self new
 		parameter: anArgument;
 		locations: aCollectionOfNodes;
@@ -120,57 +120,57 @@ FBFlag class >> parameter: anArgument locations: aCollectionOfNodes [
 ]
 
 { #category : 'accessing' }
-FBFlag class >> priority [
+StFBFlag class >> priority [
 	^ self subclassResponsibility
 ]
 
 { #category : '*FlagBrowser-UI' }
-FBFlag class >> title [
+StFBFlag class >> title [
 	^ 'All flags'
 ]
 
 { #category : 'accessing' }
-FBFlag class >> toLocations: aCollectionOfRBNodes [
+StFBFlag class >> toLocations: aCollectionOfRBNodes [
 	^ aCollectionOfRBNodes
 		collect: [ :node | 
 			| methodNode |
 			methodNode := node methodNode.
-			FBLocation class: methodNode methodClass selector: methodNode selector interval: node sourceInterval ]
+			StFBLocation class: methodNode methodClass selector: methodNode selector interval: node sourceInterval ]
 ]
 
 { #category : 'adding' }
-FBFlag >> addLocations: aCollection [
+StFBFlag >> addLocations: aCollection [
 	self locations addAll: aCollection
 ]
 
 { #category : 'accessing' }
-FBFlag >> insensitiveParameter [
+StFBFlag >> insensitiveParameter [
 	self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-FBFlag >> locations [
+StFBFlag >> locations [
 	^ locations
 ]
 
 { #category : 'accessing' }
-FBFlag >> locations: anObject [
+StFBFlag >> locations: anObject [
 	locations := anObject.
 	locations do: [ :location | location flag: self ]
 ]
 
 { #category : 'accessing' }
-FBFlag >> parameter [
+StFBFlag >> parameter [
 	^ parameter
 ]
 
 { #category : 'accessing' }
-FBFlag >> parameter: anObject [
+StFBFlag >> parameter: anObject [
 	parameter := anObject
 ]
 
 { #category : 'printing' }
-FBFlag >> printOn: aStream [
+StFBFlag >> printOn: aStream [
 	super printOn: aStream.
 
 	aStream

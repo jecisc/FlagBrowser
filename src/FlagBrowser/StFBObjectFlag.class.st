@@ -5,29 +5,29 @@ Description
 I represent a flag which parameter is an Object.
 "
 Class {
-	#name : 'FBObjectFlag',
-	#superclass : 'FBFlag',
+	#name : 'StFBObjectFlag',
+	#superclass : 'StFBFlag',
 	#category : 'FlagBrowser-Model',
 	#package : 'FlagBrowser',
 	#tag : 'Model'
 }
 
 { #category : 'testing' }
-FBObjectFlag class >> matchesArgument: aFlagArgument [
+StFBObjectFlag class >> matchesArgument: aFlagArgument [
 	^ true
 ]
 
 { #category : 'accessing' }
-FBObjectFlag class >> priority [
+StFBObjectFlag class >> priority [
 	^ 0
 ]
 
 { #category : '*FlagBrowser-UI' }
-FBObjectFlag class >> title [
+StFBObjectFlag class >> title [
 	^ 'Object flags'
 ]
 
 { #category : 'accessing' }
-FBObjectFlag >> insensitiveParameter [
+StFBObjectFlag >> insensitiveParameter [
 	"Do nothing for objects."
 ]

@@ -5,30 +5,30 @@ Description
 I am a presenter showing the flags in packages.
 "
 Class {
-	#name : 'FBByPackagesPagePresenter',
-	#superclass : 'FBByScopePagePresenter',
+	#name : 'StFBByPackagesPagePresenter',
+	#superclass : 'StFBByScopePagePresenter',
 	#category : 'FlagBrowser-UI',
 	#package : 'FlagBrowser',
 	#tag : 'UI'
 }
 
 { #category : 'specs' }
-FBByPackagesPagePresenter class >> icon [
+StFBByPackagesPagePresenter class >> icon [
 	^ #package
 ]
 
 { #category : 'accessing' }
-FBByPackagesPagePresenter class >> priority [
+StFBByPackagesPagePresenter class >> priority [
 	^ 5
 ]
 
 { #category : 'specs' }
-FBByPackagesPagePresenter class >> title [
+StFBByPackagesPagePresenter class >> title [
 	^ 'By package'
 ]
 
 { #category : 'initialization' }
-FBByPackagesPagePresenter >> initializeWidgets [
+StFBByPackagesPagePresenter >> initializeWidgets [
 	super initializeWidgets.
 
 	locationsTable
@@ -38,6 +38,6 @@ FBByPackagesPagePresenter >> initializeWidgets [
 ]
 
 { #category : 'initialization' }
-FBByPackagesPagePresenter >> scopeSelector [
+StFBByPackagesPagePresenter >> scopeSelector [
 	^ #package
 ]

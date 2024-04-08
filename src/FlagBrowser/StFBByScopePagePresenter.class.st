@@ -12,8 +12,8 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : 'FBByScopePagePresenter',
-	#superclass : 'FBPagePresenter',
+	#name : 'StFBByScopePagePresenter',
+	#superclass : 'StFBPagePresenter',
 	#instVars : [
 		'scopesList'
 	],
@@ -23,7 +23,7 @@ Class {
 }
 
 { #category : 'specs' }
-FBByScopePagePresenter class >> defaultLayout [
+StFBByScopePagePresenter class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 250;
@@ -36,7 +36,7 @@ FBByScopePagePresenter class >> defaultLayout [
 ]
 
 { #category : 'specs' }
-FBByScopePagePresenter class >> defaultSpec [
+StFBByScopePagePresenter class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 250;
@@ -49,15 +49,15 @@ FBByScopePagePresenter class >> defaultSpec [
 ]
 
 { #category : 'testing' }
-FBByScopePagePresenter class >> isAbstract [
-	^ self = FBByScopePagePresenter
+StFBByScopePagePresenter class >> isAbstract [
+	^ self = StFBByScopePagePresenter
 ]
 
 { #category : 'initialization' }
-FBByScopePagePresenter >> connectPresenters [
+StFBByScopePagePresenter >> connectPresenters [
 	| locationsByScope |
 	super connectPresenters.
-	locationsByScope := (FBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
+	locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 
 	scopesList transmitTo: locationsTable transform: [ :scope | scope ifNotNil: [ locationsByScope at: scope ] ifNil: [ #() ] ] postTransmission: [ :destination | destination selectIndex: 1 ].
 
@@ -67,7 +67,7 @@ FBByScopePagePresenter >> connectPresenters [
 ]
 
 { #category : 'initialization' }
-FBByScopePagePresenter >> initializeWidgets [
+StFBByScopePagePresenter >> initializeWidgets [
 	super initializeWidgets.
 	scopesList := self newList.
 	scopesList
@@ -76,6 +76,6 @@ FBByScopePagePresenter >> initializeWidgets [
 ]
 
 { #category : 'initialization' }
-FBByScopePagePresenter >> scopeSelector [
+StFBByScopePagePresenter >> scopeSelector [
 	^ self subclassResponsibility
 ]

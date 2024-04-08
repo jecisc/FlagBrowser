@@ -17,8 +17,8 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : 'FBByFlagsPagePresenter',
-	#superclass : 'FBPagePresenter',
+	#name : 'StFBByFlagsPagePresenter',
+	#superclass : 'StFBPagePresenter',
 	#instVars : [
 		'modeDropbox',
 		'flagsList',
@@ -30,7 +30,7 @@ Class {
 }
 
 { #category : 'specs' }
-FBByFlagsPagePresenter class >> defaultLayout [
+StFBByFlagsPagePresenter class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
@@ -47,7 +47,7 @@ FBByFlagsPagePresenter class >> defaultLayout [
 ]
 
 { #category : 'specs' }
-FBByFlagsPagePresenter class >> defaultSpec [
+StFBByFlagsPagePresenter class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpBoxLayout newVertical
 		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
@@ -64,63 +64,63 @@ FBByFlagsPagePresenter class >> defaultSpec [
 ]
 
 { #category : 'specs' }
-FBByFlagsPagePresenter class >> icon [
+StFBByFlagsPagePresenter class >> icon [
 	^ #breakpoint
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter class >> priority [
+StFBByFlagsPagePresenter class >> priority [
 	^ 1
 ]
 
 { #category : 'specs' }
-FBByFlagsPagePresenter class >> title [
+StFBByFlagsPagePresenter class >> title [
 	^ 'By flag'
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> caseCheckbox [
+StFBByFlagsPagePresenter >> caseCheckbox [
 	^ caseCheckbox
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> caseCheckbox: anObject [
+StFBByFlagsPagePresenter >> caseCheckbox: anObject [
 	caseCheckbox := anObject
 ]
 
 { #category : 'initialization' }
-FBByFlagsPagePresenter >> connectPresenters [
+StFBByFlagsPagePresenter >> connectPresenters [
 	super connectPresenters.
 
 	flagsList transmitTo: locationsTable transform: [ :item | item ifNotNil: #locations ifNil: [ #() ] ]  postTransmission: [ :destination | destination selectIndex: 1 ].
 	modeDropbox transmitTo: flagsList transform: [ :item | item model allFlags ] postTransmission: [ :destination | destination selectIndex: 1 ].
 
-	modeDropbox selectItem: FBSymbolFlag.
+	modeDropbox selectItem: StFBSymbolFlag.
 	caseCheckbox
 		whenChangedDo: [ :value | 
-			FBFlag caseSensitive: value.
+			StFBFlag caseSensitive: value.
 			modeDropbox selectItem: modeDropbox selectedItem	"Used to refresh the list" ]
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> flagsList [
+StFBByFlagsPagePresenter >> flagsList [
 	^ flagsList
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> flagsList: anObject [
+StFBByFlagsPagePresenter >> flagsList: anObject [
 	flagsList := anObject
 ]
 
 { #category : 'initialization' }
-FBByFlagsPagePresenter >> initializeWidgets [
+StFBByFlagsPagePresenter >> initializeWidgets [
 
 	super initializeWidgets.
 	modeDropbox := self newDropList.
 	flagsList := self newList.
 	caseCheckbox := self newCheckBox.
 	modeDropbox
-		items: FBFlag withAllSubclasses;
+		items: StFBFlag withAllSubclasses;
 		display: [ :class | class title ].
 	flagsList
 		display: [ :flag | flag parameter asString , ' (' , flag locations size asString , ' occurences)' ];
@@ -137,15 +137,15 @@ FBByFlagsPagePresenter >> initializeWidgets [
 				 yourself).
 	caseCheckbox
 		label: 'Case sensitive';
-		state: FBFlag caseSensitive
+		state: StFBFlag caseSensitive
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> modeDropbox [
+StFBByFlagsPagePresenter >> modeDropbox [
 	^ modeDropbox
 ]
 
 { #category : 'accessing' }
-FBByFlagsPagePresenter >> modeDropbox: anObject [
+StFBByFlagsPagePresenter >> modeDropbox: anObject [
 	modeDropbox := anObject
 ]

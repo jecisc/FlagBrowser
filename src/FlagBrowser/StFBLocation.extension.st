@@ -1,6 +1,6 @@
-Extension { #name : 'FBLocation' }
+Extension { #name : 'StFBLocation' }
 
 { #category : '*FlagBrowser-UI' }
-FBLocation >> openInBrowser [
+StFBLocation >> openInBrowser [
 	Smalltalk tools browser openOnMethod: self compiledMethod
 ]

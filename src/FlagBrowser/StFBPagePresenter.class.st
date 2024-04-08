@@ -15,7 +15,7 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : 'FBPagePresenter',
+	#name : 'StFBPagePresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'code',
@@ -27,37 +27,37 @@ Class {
 }
 
 { #category : 'accessing' }
-FBPagePresenter class >> allPages [
+StFBPagePresenter class >> allPages [
 	^ (self allSubclasses reject: #isAbstract) sorted: #priority ascending
 ]
 
 { #category : 'specs' }
-FBPagePresenter class >> icon [
+StFBPagePresenter class >> icon [
 	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-FBPagePresenter class >> priority [
+StFBPagePresenter class >> priority [
 	^ self subclassResponsibility
 ]
 
 { #category : 'specs' }
-FBPagePresenter class >> title [
+StFBPagePresenter class >> title [
 	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-FBPagePresenter >> code [
+StFBPagePresenter >> code [
 	^ code
 ]
 
 { #category : 'accessing' }
-FBPagePresenter >> code: anObject [
+StFBPagePresenter >> code: anObject [
 	code := anObject
 ]
 
 { #category : 'initialization' }
-FBPagePresenter >> connectPresenters [
+StFBPagePresenter >> connectPresenters [
 
 	code whenSubmitDo: [ :text | code behavior compile: text ].
 
@@ -68,14 +68,14 @@ FBPagePresenter >> connectPresenters [
 ]
 
 { #category : 'finalization' }
-FBPagePresenter >> finalize [
+StFBPagePresenter >> finalize [
 	"We subscribe to method announcements to refresh them when a change happens. Here we make sure we unsubscribe ourselves."
 
 	self class codeChangeAnnouncer unsubscribe: self
 ]
 
 { #category : 'initialization' }
-FBPagePresenter >> initializeWidgets [
+StFBPagePresenter >> initializeWidgets [
 	locationsTable := self newTable.
 	code := self newCode.
 
@@ -89,24 +89,24 @@ FBPagePresenter >> initializeWidgets [
 ]
 
 { #category : 'accessing' }
-FBPagePresenter >> locationsTable [
+StFBPagePresenter >> locationsTable [
 	^ locationsTable
 ]
 
 { #category : 'accessing' }
-FBPagePresenter >> locationsTable: anObject [
+StFBPagePresenter >> locationsTable: anObject [
 	locationsTable := anObject
 ]
 
 { #category : 'instance creation' }
-FBPagePresenter >> methodAnnouncementReceived: anAnnouncement [
+StFBPagePresenter >> methodAnnouncementReceived: anAnnouncement [
 	"No need to rebuild if it contains the world menu pragma"
 
 	anAnnouncement methodAffected name = self locationsTable selectedItem compiledMethod name ifTrue: [ self selectLocation: self locationsTable selectedItem ]
 ]
 
 { #category : 'initialization' }
-FBPagePresenter >> selectLocation: location [
+StFBPagePresenter >> selectLocation: location [
 
 	location ifNil: [ ^ self code ].
 
@@ -117,7 +117,7 @@ FBPagePresenter >> selectLocation: location [
 ]
 
 { #category : 'initialization' }
-FBPagePresenter >> tableMenu [
+StFBPagePresenter >> tableMenu [
 	| aMenu |
 	aMenu := SpMenuPresenter new.
 

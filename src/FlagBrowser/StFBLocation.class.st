@@ -17,7 +17,7 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : 'FBLocation',
+	#name : 'StFBLocation',
 	#superclass : 'Object',
 	#instVars : [
 		'classLocation',
@@ -31,7 +31,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-FBLocation class >> class: aClass selector: aMethodSelector interval: anInterval [
+StFBLocation class >> class: aClass selector: aMethodSelector interval: anInterval [
 	^ self new
 		classLocation: aClass;
 		selector: aMethodSelector;
@@ -40,7 +40,7 @@ FBLocation class >> class: aClass selector: aMethodSelector interval: anInterval
 ]
 
 { #category : 'comparing' }
-FBLocation >> = anObject [
+StFBLocation >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
 	self == anObject ifTrue: [ ^ true ].
@@ -49,74 +49,74 @@ FBLocation >> = anObject [
 ]
 
 { #category : 'accessing' }
-FBLocation >> classLocation [
+StFBLocation >> classLocation [
 	^ classLocation
 ]
 
 { #category : 'accessing' }
-FBLocation >> classLocation: anObject [
+StFBLocation >> classLocation: anObject [
 	classLocation := anObject
 ]
 
 { #category : 'accessing' }
-FBLocation >> compiledMethod [
+StFBLocation >> compiledMethod [
 	^ self classLocation >> self selector
 ]
 
 { #category : 'accessing' }
-FBLocation >> flag [
+StFBLocation >> flag [
 	^ flag
 ]
 
 { #category : 'accessing' }
-FBLocation >> flag: aFlag [
+StFBLocation >> flag: aFlag [
 	flag := aFlag
 ]
 
 { #category : 'comparing' }
-FBLocation >> hash [
+StFBLocation >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ selector hash bitXor: (classLocation hash bitXor: interval hash)
 ]
 
 { #category : 'accessing' }
-FBLocation >> interval [
+StFBLocation >> interval [
 	^ interval
 ]
 
 { #category : 'accessing' }
-FBLocation >> interval: anObject [
+StFBLocation >> interval: anObject [
 	interval := anObject
 ]
 
 { #category : '*FlagBrowser-UI' }
-FBLocation >> openInBrowser [
+StFBLocation >> openInBrowser [
 	Smalltalk tools browser openOnMethod: self compiledMethod
 ]
 
 { #category : 'accessing' }
-FBLocation >> package [
+StFBLocation >> package [
 	^ self compiledMethod package
 ]
 
 { #category : 'accessing' }
-FBLocation >> packageName [
+StFBLocation >> packageName [
 
 	^ self package name
 ]
 
 { #category : 'accessing' }
-FBLocation >> selector [
+StFBLocation >> selector [
 	^ selector
 ]
 
 { #category : 'accessing' }
-FBLocation >> selector: anObject [
+StFBLocation >> selector: anObject [
 	selector := anObject
 ]
 
 { #category : 'accessing' }
-FBLocation >> sourceCode [
+StFBLocation >> sourceCode [
 	^ self compiledMethod sourceCode
 ]
