@@ -26,22 +26,20 @@ StFlagBrowser class >> defaultLayout [
 
 { #category : 'specs' }
 StFlagBrowser class >> defaultSpec [
+
 	self flag: #pharo11.
-	^ SpBoxLayout newVertical
-		add: #tabs;
-		yourself
+	^ self defaultSpec
 ]
 
 { #category : 'world menu' }
 StFlagBrowser class >> menuCommandOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Flags Browser')
-		parent: #'New Tools';
-		order: 20;
+		parent: #Browsing;
+		order: 3;
 		action: [ self open ];
 		iconName: #breakpoint;
-		help: 'Explore the flags in the system.';
-		withSeparatorAfter 
+		help: 'Explore the flags in the system.'
 ]
 
 { #category : 'specs' }
