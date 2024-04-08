@@ -12,15 +12,16 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : #FBByScopePagePresenter,
-	#superclass : #FBPagePresenter,
+	#name : 'FBByScopePagePresenter',
+	#superclass : 'FBPagePresenter',
 	#instVars : [
 		'scopesList'
 	],
-	#category : #'FlagBrowser-Spec-Pharo9'
+	#category : 'FlagBrowser-Spec-Pharo9',
+	#package : 'FlagBrowser-Spec-Pharo9'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 FBByScopePagePresenter class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -33,7 +34,7 @@ FBByScopePagePresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 FBByScopePagePresenter class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpPanedLayout newHorizontal
@@ -46,15 +47,15 @@ FBByScopePagePresenter class >> defaultSpec [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 FBByScopePagePresenter class >> isAbstract [
 	^ self = FBByScopePagePresenter
 ]
 
-{ #category : #initialization }
-FBByScopePagePresenter >> initializePresenter [
+{ #category : 'initialization' }
+FBByScopePagePresenter >> connectPresenters [
 	| locationsByScope |
-	super initializePresenter.
+	super connectPresenters.
 	locationsByScope := (FBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 
 	scopesList transmitTo: locationsTable transform: [ :scope | scope ifNotNil: [ locationsByScope at: scope ] ifNil: [ #() ] ] postTransmission: [ :destination | destination selectIndex: 1 ].
@@ -64,7 +65,7 @@ FBByScopePagePresenter >> initializePresenter [
 		selectIndex: 1
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 FBByScopePagePresenter >> initializeWidgets [
 	super initializeWidgets.
 	scopesList := self newList.
@@ -73,7 +74,7 @@ FBByScopePagePresenter >> initializeWidgets [
 		sortingBlock: #name ascending
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 FBByScopePagePresenter >> scopeSelector [
 	^ self subclassResponsibility
 ]

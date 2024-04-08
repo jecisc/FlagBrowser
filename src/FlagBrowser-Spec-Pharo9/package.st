@@ -1,1 +1,1 @@
-Package { #name : #'FlagBrowser-Spec-Pharo9' }
+Package { #name : 'FlagBrowser-Spec-Pharo9' }

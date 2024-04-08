@@ -1,6 +1,6 @@
-Extension { #name : #FBSymbolFlag }
+Extension { #name : 'FBSymbolFlag' }
 
-{ #category : #'*FlagBrowser-Spec-Pharo9' }
+{ #category : '*FlagBrowser-Spec-Pharo9' }
 FBSymbolFlag class >> title [
 	^ 'Symbol flags'
 ]

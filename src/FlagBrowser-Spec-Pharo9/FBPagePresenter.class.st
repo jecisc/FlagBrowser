@@ -15,53 +15,65 @@ Internal Representation and Key Implementation Points.
 
 "
 Class {
-	#name : #FBPagePresenter,
-	#superclass : #SpPresenter,
+	#name : 'FBPagePresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'code',
 		'locationsTable'
 	],
-	#category : #'FlagBrowser-Spec-Pharo9'
+	#category : 'FlagBrowser-Spec-Pharo9',
+	#package : 'FlagBrowser-Spec-Pharo9'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter class >> allPages [
 	^ (self allSubclasses reject: #isAbstract) sorted: #priority ascending
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 FBPagePresenter class >> icon [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter class >> priority [
 	^ self subclassResponsibility
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 FBPagePresenter class >> title [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter >> code [
 	^ code
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter >> code: anObject [
 	code := anObject
 ]
 
-{ #category : #initialization }
-FBPagePresenter >> initializePresenter [
+{ #category : 'initialization' }
+FBPagePresenter >> connectPresenters [
+
 	code whenSubmitDo: [ :text | code behavior compile: text ].
 
-	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ]
+	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ].
+
+	"We want to refresh the method pane if we edited the currently selected method in another tool."
+	self class codeChangeAnnouncer weak when: MethodAnnouncement send: #methodAnnouncementReceived: to: self
 ]
 
-{ #category : #initialization }
+{ #category : 'finalization' }
+FBPagePresenter >> finalize [
+	"We subscribe to method announcements to refresh them when a change happens. Here we make sure we unsubscribe ourselves."
+
+	self class codeChangeAnnouncer unsubscribe: self
+]
+
+{ #category : 'initialization' }
 FBPagePresenter >> initializeWidgets [
 	locationsTable := self newTable.
 	code := self newCode.
@@ -75,17 +87,24 @@ FBPagePresenter >> initializeWidgets [
 	code syntaxHighlight: true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter >> locationsTable [
 	^ locationsTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 FBPagePresenter >> locationsTable: anObject [
 	locationsTable := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'instance creation' }
+FBPagePresenter >> methodAnnouncementReceived: anAnnouncement [
+	"No need to rebuild if it contains the world menu pragma"
+
+	anAnnouncement methodAffected name = self locationsTable selectedItem compiledMethod name ifTrue: [ self selectLocation: self locationsTable selectedItem ]
+]
+
+{ #category : 'initialization' }
 FBPagePresenter >> selectLocation: location [
 
 	location ifNil: [ ^ self code ].
@@ -96,7 +115,7 @@ FBPagePresenter >> selectLocation: location [
 		  selectionInterval: location interval
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 FBPagePresenter >> tableMenu [
 	| aMenu |
 	aMenu := SpMenuPresenter new.
