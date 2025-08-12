@@ -124,7 +124,7 @@ StFBFlag class >> priority [
 	^ self subclassResponsibility
 ]
 
-{ #category : '*FlagBrowser-UI' }
+{ #category : 'accessing' }
 StFBFlag class >> title [
 	^ 'All flags'
 ]

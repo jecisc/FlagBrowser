@@ -90,7 +90,7 @@ StFBLocation >> interval: anObject [
 	interval := anObject
 ]
 
-{ #category : '*FlagBrowser-UI' }
+{ #category : 'as yet unclassified' }
 StFBLocation >> openInBrowser [
 	Smalltalk tools browser openOnMethod: self compiledMethod
 ]

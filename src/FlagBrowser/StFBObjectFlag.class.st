@@ -22,7 +22,7 @@ StFBObjectFlag class >> priority [
 	^ 0
 ]
 
-{ #category : '*FlagBrowser-UI' }
+{ #category : 'accessing' }
 StFBObjectFlag class >> title [
 	^ 'Object flags'
 ]

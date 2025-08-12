@@ -22,7 +22,7 @@ StFBStringFlag class >> priority [
 	^ 10
 ]
 
-{ #category : '*FlagBrowser-UI' }
+{ #category : 'accessing' }
 StFBStringFlag class >> title [
 	^ 'String flags'
 ]
