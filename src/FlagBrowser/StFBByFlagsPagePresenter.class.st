@@ -30,23 +30,6 @@ Class {
 }
 
 { #category : 'specs' }
-StFBByFlagsPagePresenter class >> defaultLayout [
-
-	^ SpBoxLayout newVertical
-		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
-		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 250;
-				   add: #flagsList;
-				   add: (SpPanedLayout newVertical
-						    add: #locationsTable;
-						    add: #code;
-						    yourself);
-				   yourself);
-		  add: #caseCheckbox withConstraints: [ :constraints | constraints height: 20 ];
-		  yourself
-]
-
-{ #category : 'specs' }
 StFBByFlagsPagePresenter class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpBoxLayout newVertical
@@ -90,16 +73,43 @@ StFBByFlagsPagePresenter >> caseCheckbox: anObject [
 
 { #category : 'initialization' }
 StFBByFlagsPagePresenter >> connectPresenters [
+
 	super connectPresenters.
 
-	flagsList transmitTo: locationsTable transform: [ :item | item ifNotNil: #locations ifNil: [ #() ] ]  postTransmission: [ :destination | destination selectIndex: 1 ].
-	modeDropbox transmitTo: flagsList transform: [ :item | item model allFlags ] postTransmission: [ :destination | destination selectIndex: 1 ].
+	flagsList
+		transmitTo: locationsTable
+		transform: [ :item |
+				item
+					ifNotNil: #locations
+					ifNil: [ #(  ) ] ]
+		postTransmission: [ :destination | destination selectIndex: 1 ].
+
+	modeDropbox transmitTo: flagsList transform: [ :item | item model allFlags ] postTransmission: [ :destination | destination listPresenter selectIndex: 1 ].
 
 	modeDropbox selectItem: StFBSymbolFlag.
-	caseCheckbox
-		whenChangedDo: [ :value | 
+	caseCheckbox whenChangedDo: [ :value |
 			StFBFlag caseSensitive: value.
-			modeDropbox selectItem: modeDropbox selectedItem	"Used to refresh the list" ]
+			modeDropbox selectItem: modeDropbox selectedItem "Used to refresh the list" ]
+]
+
+{ #category : 'layout' }
+StFBByFlagsPagePresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: #modeDropbox withConstraints: [ :constraints | constraints height: 30 ];
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 250;
+				   add: #flagsList;
+				   add: (SpPanedLayout newVertical
+						    add: #locationsTable;
+						    add: #code;
+						    yourself);
+				   yourself);
+		  add: (SpBoxLayout newHorizontal
+				   add: #caseCheckbox expand: false;
+				   add: #showPharoFlagsCheckbox)
+		  withConstraints: [ :constraints | constraints height: 20 ];
+		  yourself
 ]
 
 { #category : 'accessing' }
@@ -113,11 +123,11 @@ StFBByFlagsPagePresenter >> flagsList: anObject [
 ]
 
 { #category : 'initialization' }
-StFBByFlagsPagePresenter >> initializeWidgets [
+StFBByFlagsPagePresenter >> initializePresenters [
 
-	super initializeWidgets.
+	super initializePresenters.
 	modeDropbox := self newDropList.
-	flagsList := self newList.
+	flagsList := self newFilteringList.
 	caseCheckbox := self newCheckBox.
 	modeDropbox
 		items: StFBFlag withAllSubclasses;
@@ -148,4 +158,17 @@ StFBByFlagsPagePresenter >> modeDropbox [
 { #category : 'accessing' }
 StFBByFlagsPagePresenter >> modeDropbox: anObject [
 	modeDropbox := anObject
+]
+
+{ #category : 'private' }
+StFBByFlagsPagePresenter >> refresh [
+
+	| selected |
+	selected := flagsList selectedItem.
+	flagsList items: modeDropbox selectedItem allFlags.
+
+	selected ifNotNil: [
+			flagsList items
+				detect: [ :flag | flag parameter = selected parameter ]
+				ifFound: [ :flag | flagsList selectItem: flag ] ]
 ]

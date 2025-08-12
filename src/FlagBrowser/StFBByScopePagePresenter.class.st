@@ -23,19 +23,6 @@ Class {
 }
 
 { #category : 'specs' }
-StFBByScopePagePresenter class >> defaultLayout [
-
-	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 250;
-		  add: #scopesList;
-		  add: (SpPanedLayout newVertical
-				   add: #locationsTable;
-				   add: #code;
-				   yourself);
-		  yourself
-]
-
-{ #category : 'specs' }
 StFBByScopePagePresenter class >> defaultSpec [
 	self flag: #pharo11.
 	^ SpPanedLayout newHorizontal
@@ -55,24 +42,59 @@ StFBByScopePagePresenter class >> isAbstract [
 
 { #category : 'initialization' }
 StFBByScopePagePresenter >> connectPresenters [
-	| locationsByScope |
-	super connectPresenters.
-	locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 
-	scopesList transmitTo: locationsTable transform: [ :scope | scope ifNotNil: [ locationsByScope at: scope ] ifNil: [ #() ] ] postTransmission: [ :destination | destination selectIndex: 1 ].
+	super connectPresenters.
+
 
 	scopesList
-		items: locationsByScope keys;
-		selectIndex: 1
+		transmitTo: locationsTable
+		transform: [ :scope |
+				scope
+					ifNotNil: [
+							| locationsByScope |
+							locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
+							locationsByScope at: scope ]
+					ifNil: [ #(  ) ] ]
+		postTransmission: [ :destination | destination selectIndex: 1 ].
+
+	self refresh
+]
+
+{ #category : 'layout' }
+StFBByScopePagePresenter >> defaultLayout [
+
+	^ SpBoxLayout newVertical
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 250;
+				   add: #scopesList;
+				   add: (SpPanedLayout newVertical
+						    add: #locationsTable;
+						    add: #code;
+						    yourself);
+				   yourself);
+		  add: #showPharoFlagsCheckbox withConstraints: [ :constraints | constraints height: 20 ];
+		  yourself
 ]
 
 { #category : 'initialization' }
-StFBByScopePagePresenter >> initializeWidgets [
-	super initializeWidgets.
-	scopesList := self newList.
+StFBByScopePagePresenter >> initializePresenters [
+
+	super initializePresenters.
+	scopesList := self newFilteringList.
 	scopesList
 		display: #name;
 		sortingBlock: #name ascending
+]
+
+{ #category : 'private' }
+StFBByScopePagePresenter >> refresh [
+
+	| selected |
+	selected := scopesList selectedItem.
+	scopesList items: ((StFBFlag allFlags flatCollect: #locations) collect: self scopeSelector as: Set).
+
+	(selected isNotNil and: [ scopesList items includes: selected ]) ifTrue: [ ^ scopesList selectItem: selected ].
+	scopesList listPresenter selectIndex: 1
 ]
 
 { #category : 'initialization' }

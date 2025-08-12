@@ -28,8 +28,8 @@ StFBByClassesPagePresenter class >> title [
 ]
 
 { #category : 'initialization' }
-StFBByClassesPagePresenter >> initializeWidgets [
-	super initializeWidgets.
+StFBByClassesPagePresenter >> initializePresenters [
+	super initializePresenters.
 
 	locationsTable
 		addColumn: (SpStringTableColumn title: 'Method' evaluated: #selector);

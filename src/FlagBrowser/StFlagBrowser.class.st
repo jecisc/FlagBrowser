@@ -59,7 +59,7 @@ StFlagBrowser class >> taskbarIconName [
 ]
 
 { #category : 'initialization' }
-StFlagBrowser >> initializeWidgets [
+StFlagBrowser >> initializePresenters [
 	tabs := self newNotebook.
 
 	StFBPagePresenter allPages

@@ -19,7 +19,8 @@ Class {
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'code',
-		'locationsTable'
+		'locationsTable',
+		'showPharoFlagsCheckbox'
 	],
 	#category : 'FlagBrowser-UI',
 	#package : 'FlagBrowser',
@@ -63,21 +64,21 @@ StFBPagePresenter >> connectPresenters [
 
 	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ].
 
+	showPharoFlagsCheckbox whenChangedDo: [ :value |
+			StFBFlag showPharoFlags: value.
+			self refresh ].
+
 	"We want to refresh the method pane if we edited the currently selected method in another tool."
-	self class codeChangeAnnouncer weak when: MethodAnnouncement send: #methodAnnouncementReceived: to: self
-]
-
-{ #category : 'finalization' }
-StFBPagePresenter >> finalize [
-	"We subscribe to method announcements to refresh them when a change happens. Here we make sure we unsubscribe ourselves."
-
-	self class codeChangeAnnouncer unsubscribe: self
+	self class codeChangeAnnouncer weak when: MethodAnnouncement send: #refresh to: self
 ]
 
 { #category : 'initialization' }
-StFBPagePresenter >> initializeWidgets [
+StFBPagePresenter >> initializePresenters [
+
+	super initializePresenters.
 	locationsTable := self newTable.
 	code := self newCode.
+	showPharoFlagsCheckbox := self newCheckBox.
 
 	locationsTable
 		beResizable;
@@ -85,7 +86,11 @@ StFBPagePresenter >> initializeWidgets [
 		whenActivatedDo: [ :selection | selection selectedItem openInBrowser ];
 		contextMenu: self tableMenu.
 
-	code syntaxHighlight: true
+	code syntaxHighlight: true.
+
+	showPharoFlagsCheckbox
+		label: 'Show Pharo''s flags';
+		state: self showPharoFlags
 ]
 
 { #category : 'accessing' }
@@ -98,11 +103,10 @@ StFBPagePresenter >> locationsTable: anObject [
 	locationsTable := anObject
 ]
 
-{ #category : 'instance creation' }
-StFBPagePresenter >> methodAnnouncementReceived: anAnnouncement [
-	"No need to rebuild if it contains the world menu pragma"
+{ #category : 'accessing' }
+StFBPagePresenter >> refresh [
 
-	anAnnouncement methodAffected name = self locationsTable selectedItem compiledMethod name ifTrue: [ self selectLocation: self locationsTable selectedItem ]
+	self subclassResponsibility
 ]
 
 { #category : 'initialization' }
@@ -114,6 +118,12 @@ StFBPagePresenter >> selectLocation: location [
 		  text: location sourceCode;
 		  beForMethod: location compiledMethod;
 		  selectionInterval: location interval
+]
+
+{ #category : 'testing' }
+StFBPagePresenter >> showPharoFlags [
+
+	^ StFBFlag showPharoFlags
 ]
 
 { #category : 'initialization' }

@@ -24,7 +24,8 @@ Class {
 		'locations'
 	],
 	#classVars : [
-		'CaseSensitive'
+		'CaseSensitive',
+		'ShowPharoFlags'
 	],
 	#category : 'FlagBrowser-Model',
 	#package : 'FlagBrowser',
@@ -33,32 +34,45 @@ Class {
 
 { #category : 'accessing' }
 StFBFlag class >> addNew: aClass for: argument with: rbNodes in: flags [
-	self caseSensitive
-		ifFalse: [ | insensitiveArgument |
+
+	| newLocations |
+	newLocations := self toLocations: rbNodes.
+
+	self showPharoFlags ifFalse: [
+			| pharoPackages |
+			pharoPackages := SystemBuildInfo current systemPackageNames.
+			newLocations := newLocations reject: [ :location | pharoPackages includes: location package name ].
+			newLocations ifEmpty: [ ^ self ] ].
+
+	self caseSensitive ifFalse: [
+			| insensitiveArgument |
 			insensitiveArgument := argument asString asLowercase.
 			flags
 				detect: [ :flag | flag parameter asString asLowercase = insensitiveArgument and: [ flag parameter class = argument class ] ]
-				ifFound: [ :flag | 
-					^ flag
-						addLocations: (self toLocations: rbNodes);
-						insensitiveParameter ] ].
+				ifFound: [ :flag |
+						^ flag
+							  addLocations: newLocations;
+							  insensitiveParameter ] ].
 
-	flags add: (aClass parameter: argument locations: (self toLocations: rbNodes))
+	flags add: (aClass parameter: argument locations: newLocations)
 ]
 
 { #category : 'accessing' }
 StFBFlag class >> allFlags [
-	^ self isAbstract ifTrue: [ self allFlagsInSystem ] ifFalse: [ self allInSystem ]
+
+	^ self isAbstract
+		  ifTrue: [ self allFlagsInSystem ]
+		  ifFalse: [ self allInSystem ]
 ]
 
 { #category : 'accessing' }
 StFBFlag class >> allFlagsInSystem [
+
 	| flagNodes flags |
 	flags := OrderedCollection new.
-	flagNodes := #flag: senders
-		flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
-	(flagNodes groupedBy: [ :node | node arguments first value ])
-		keysAndValuesDo: [ :argument :rbNodes | 
+	flagNodes := #flag: senders flatCollect: [ :sender |
+		             sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
+	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
 			self
 				addNew: (self flagClassFor: argument)
 				for: argument
@@ -69,16 +83,17 @@ StFBFlag class >> allFlagsInSystem [
 
 { #category : 'accessing' }
 StFBFlag class >> allInSystem [
+
 	| flagNodes flags |
 	self isAbstract ifTrue: [ ^ self error: 'This method can be called only on concrete classes.' ].
 
 	flags := OrderedCollection new.
-	flagNodes := #flag: senders
-		flatCollect: [ :sender | sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
-	(flagNodes groupedBy: [ :node | node arguments first value ])
-		keysAndValuesDo: [ :argument :rbNodes | 
-			(StFBFlag flagClassFor: argument) = self
-				ifTrue: [ self
+
+	flagNodes := #flag: senders flatCollect: [ :sender |
+		             sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
+	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
+			(StFBFlag flagClassFor: argument) = self ifTrue: [
+					self
 						addNew: self
 						for: argument
 						with: rbNodes
@@ -122,6 +137,18 @@ StFBFlag class >> parameter: anArgument locations: aCollectionOfNodes [
 { #category : 'accessing' }
 StFBFlag class >> priority [
 	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+StFBFlag class >> showPharoFlags [
+
+	^ ShowPharoFlags ifNil: [ ShowPharoFlags := false ]
+]
+
+{ #category : 'accessing' }
+StFBFlag class >> showPharoFlags: aBoolean [
+
+	ShowPharoFlags := aBoolean
 ]
 
 { #category : 'accessing' }
