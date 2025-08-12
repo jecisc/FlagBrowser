@@ -103,7 +103,7 @@ StFBPagePresenter >> locationsTable: anObject [
 	locationsTable := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : 'private' }
 StFBPagePresenter >> refresh [
 
 	self subclassResponsibility
