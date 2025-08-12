@@ -15,7 +15,8 @@ Class {
 	#name : 'StFBByScopePagePresenter',
 	#superclass : 'StFBPagePresenter',
 	#instVars : [
-		'scopesList'
+		'scopesList',
+		'locationsByScope'
 	],
 	#category : 'FlagBrowser-UI',
 	#package : 'FlagBrowser',
@@ -51,7 +52,6 @@ StFBByScopePagePresenter >> connectPresenters [
 		transform: [ :scope |
 				scope
 					ifNotNil: [
-							| locationsByScope |
 							locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
 							locationsByScope at: scope ]
 					ifNil: [ #(  ) ] ]
@@ -82,7 +82,7 @@ StFBByScopePagePresenter >> initializePresenters [
 	super initializePresenters.
 	scopesList := self newFilteringList.
 	scopesList
-		display: #name;
+		display: [ :scope | scope name , ' (' , (locationsByScope at: scope) size asString , ' flags)' ];
 		sortingBlock: #name ascending
 ]
 
@@ -91,10 +91,12 @@ StFBByScopePagePresenter >> refresh [
 
 	| selected |
 	selected := scopesList selectedItem.
-	scopesList items: ((StFBFlag allFlags flatCollect: #locations) collect: self scopeSelector as: Set).
+	locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: self scopeSelector.
+	scopesList items: locationsByScope keys.
 
 	(selected isNotNil and: [ scopesList items includes: selected ]) ifTrue: [ ^ scopesList selectItem: selected ].
-	scopesList listPresenter selectIndex: 1
+	scopesList listPresenter selectIndex: 1.
+	locationsTable selectIndex: 1
 ]
 
 { #category : 'initialization' }

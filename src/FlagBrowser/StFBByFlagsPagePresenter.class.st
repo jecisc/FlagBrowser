@@ -170,5 +170,7 @@ StFBByFlagsPagePresenter >> refresh [
 	selected ifNotNil: [
 			flagsList items
 				detect: [ :flag | flag parameter = selected parameter ]
-				ifFound: [ :flag | flagsList selectItem: flag ] ]
+				ifFound: [ :flag | flagsList selectItem: flag ] ].
+
+	locationsTable selectIndex: 1
 ]
