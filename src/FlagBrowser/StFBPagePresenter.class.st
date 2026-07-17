@@ -16,7 +16,7 @@ Internal Representation and Key Implementation Points.
 "
 Class {
 	#name : 'StFBPagePresenter',
-	#superclass : 'SpPresenter',
+	#superclass : 'StPresenter',
 	#instVars : [
 		'code',
 		'locationsTable',

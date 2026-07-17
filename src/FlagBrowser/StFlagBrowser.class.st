@@ -8,7 +8,7 @@ I can organize them in different ways such as flags by flags parameters, flags b
 "
 Class {
 	#name : 'StFlagBrowser',
-	#superclass : 'SpPresenter',
+	#superclass : 'StPresenter',
 	#instVars : [
 		'tabs'
 	],
@@ -28,7 +28,7 @@ StFlagBrowser class >> defaultLayout [
 StFlagBrowser class >> defaultSpec [
 
 	self flag: #pharo11.
-	^ self defaultSpec
+	^ self defaultLayout
 ]
 
 { #category : 'world menu' }
@@ -38,7 +38,7 @@ StFlagBrowser class >> menuCommandOn: aBuilder [
 		parent: #Browsing;
 		order: 3;
 		action: [ self open ];
-		iconName: #breakpoint;
+		iconName: self taskbarIconName;
 		help: 'Explore the flags in the system.'
 ]
 
