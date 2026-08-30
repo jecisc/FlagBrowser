@@ -33,10 +33,10 @@ Class {
 }
 
 { #category : 'accessing' }
-StFBFlag class >> addNew: aClass for: argument with: rbNodes in: flags [
+StFBFlag class >> addNew: aClass for: argument with: astNodes in: flags [
 
 	| newLocations |
-	newLocations := self toLocations: rbNodes.
+	newLocations := self toLocations: astNodes.
 
 	self showPharoFlags ifFalse: [
 			| pharoPackages |
@@ -155,8 +155,8 @@ StFBFlag class >> title [
 ]
 
 { #category : 'accessing' }
-StFBFlag class >> toLocations: aCollectionOfRBNodes [
-	^ aCollectionOfRBNodes
+StFBFlag class >> toLocations: aCollectionOfASTNodes [
+	^ aCollectionOfASTNodes
 		collect: [ :node | 
 			| methodNode |
 			methodNode := node methodNode.
