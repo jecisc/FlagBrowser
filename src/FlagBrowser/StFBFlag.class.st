@@ -89,8 +89,7 @@ StFBFlag class >> allInSystem [
 
 	flags := OrderedCollection new.
 
-	flagNodes := #flag: senders flatCollect: [ :sender |
-		             sender compiledMethod ast allChildren select: [ :child | child isMessage and: [ child selector = #flag: ] ] ].
+	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod flagNodes ].
 	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
 			(StFBFlag flagClassFor: argument) = self ifTrue: [
 					self

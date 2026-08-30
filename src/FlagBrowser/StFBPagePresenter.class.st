@@ -69,7 +69,9 @@ StFBPagePresenter >> connectPresenters [
 			self refresh ].
 
 	"We want to refresh the method pane if we edited the currently selected method in another tool."
-	self class codeChangeAnnouncer weak when: MethodAnnouncement send: #refresh to: self
+	self class codeChangeAnnouncer weak when: MethodAdded send: #refreshOnAddition: to: self.
+	self class codeChangeAnnouncer weak when: MethodRemoved send: #refreshOnRemoval: to: self.
+	self class codeChangeAnnouncer weak when: MethodModified send: #refreshOnUpdate: to: self
 ]
 
 { #category : 'initialization' }
@@ -107,6 +109,24 @@ StFBPagePresenter >> locationsTable: anObject [
 StFBPagePresenter >> refresh [
 
 	self subclassResponsibility
+]
+
+{ #category : 'initialization' }
+StFBPagePresenter >> refreshOnAddition: aMethodAddition [
+
+	aMethodAddition method flagNodes ifNotEmpty: [ self refresh ]
+]
+
+{ #category : 'initialization' }
+StFBPagePresenter >> refreshOnRemoval: aMethodRemoved [
+
+	aMethodRemoved method flagNodes ifNotEmpty: [ self refresh ]
+]
+
+{ #category : 'initialization' }
+StFBPagePresenter >> refreshOnUpdate: aMethodModified [
+
+	aMethodModified method flagNodes = aMethodModified oldMethod flagNodes ifFalse: [ self refresh ]
 ]
 
 { #category : 'initialization' }
