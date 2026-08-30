@@ -62,7 +62,7 @@ StFBPagePresenter >> connectPresenters [
 
 	code whenSubmitDo: [ :text | code behavior compile: text ].
 
-	locationsTable whenSelectionChangedDo: [ :selection | [ :location | self selectLocation: location ] cull: selection selectedItem ].
+	locationsTable whenSelectionChangedDo: [ :selection | self selectLocation: selection selectedItem ].
 
 	showPharoFlagsCheckbox whenChangedDo: [ :value |
 			StFBFlag showPharoFlags: value.
