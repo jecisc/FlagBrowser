@@ -49,6 +49,19 @@ StFBFlagTest >> testAddLocations [
 ]
 
 { #category : 'tests' }
+StFBFlagTest >> testAddLocationsRegistersFlagReference [
+
+	| flag |
+	flag := StFBSymbolFlag new.
+	flag parameter: #jeciscTestSymbolFlag.
+	flag locations: (StFBFlag toLocations: (self flagNodesFor: #methodWithLowCaseSymbolFlag)).
+	flag addLocations: (StFBFlag toLocations: (self flagNodesFor: #methodWithSymbolFlag)).
+
+	self assert: flag locations size equals: 2.
+	self assert: (flag locations allSatisfy: [ :location | location flag = flag ])
+]
+
+{ #category : 'tests' }
 StFBFlagTest >> testAddNewCreatesFlag [
 
 	| flags |

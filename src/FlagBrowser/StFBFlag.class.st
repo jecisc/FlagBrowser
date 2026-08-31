@@ -165,7 +165,9 @@ StFBFlag class >> toLocations: aCollectionOfASTNodes [
 
 { #category : 'adding' }
 StFBFlag >> addLocations: aCollection [
-	self locations addAll: aCollection
+
+	self locations addAll: aCollection.
+	aCollection do: [ :location | location flag: self ]
 ]
 
 { #category : 'accessing' }

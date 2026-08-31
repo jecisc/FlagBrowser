@@ -35,6 +35,15 @@ StFBByFlagsPagePresenterTest >> tearDown [
 ]
 
 { #category : 'tests' }
+StFBByFlagsPagePresenterTest >> testFlagDisplayShowsParameterAndOccurrences [
+
+	| flag |
+	flag := presenter flagsList items detect: [ :f | f parameter = #jeciscTestSymbolFlag ].
+
+	self assert: (presenter flagsList display value: flag) equals: 'jeciscTestSymbolFlag (1 occurences)'
+]
+
+{ #category : 'tests' }
 StFBByFlagsPagePresenterTest >> testRefreshPreservesSelectedFlag [
 
 	| flag |
@@ -57,6 +66,18 @@ StFBByFlagsPagePresenterTest >> testSelectingFlagTransmitsLocations [
 	self assert: presenter locationsTable items size equals: 1.
 	self assert: presenter locationsTable selectedItem selector equals: #methodWithSymbolFlag.
 	self assert: presenter locationsTable selectedItem classLocation equals: StFBFlagTestFixture
+]
+
+{ #category : 'tests' }
+StFBByFlagsPagePresenterTest >> testSelectingLocationSelectsCodeInterval [
+
+	| flag index |
+	flag := presenter flagsList items detect: [ :f | f parameter = #jeciscTestSymbolFlag ].
+	index := presenter flagsList items indexOf: flag.
+	presenter flagsList listPresenter clickAtIndex: index.
+	presenter locationsTable clickItem: 1.
+
+	self assert: presenter code selectionInterval equals: presenter locationsTable selectedItem interval
 ]
 
 { #category : 'tests' }
@@ -86,6 +107,25 @@ StFBByFlagsPagePresenterTest >> testSelectingStringModeShowsStringFlags [
 
 	self assert: (presenter flagsList items allSatisfy: [ :flag | flag isKindOf: StFBStringFlag ]).
 	self assert: ((presenter flagsList items collect: #parameter) includesAll: { 'Flag Test'. 'flag test' })
+]
+
+{ #category : 'tests' }
+StFBByFlagsPagePresenterTest >> testSubmittingCodeRecompilesTheMethod [
+
+	| flag index originalSource originalProtocol |
+	originalSource := (StFBFlagTestFixture >> #methodWithSymbolFlag) sourceCode.
+	originalProtocol := (StFBFlagTestFixture >> #methodWithSymbolFlag) protocol.
+	flag := presenter flagsList items detect: [ :f | f parameter = #jeciscTestSymbolFlag ].
+	index := presenter flagsList items indexOf: flag.
+	presenter flagsList listPresenter clickAtIndex: index.
+	presenter locationsTable clickItem: 1.
+
+	[
+		presenter code text: (originalSource copyReplaceAll: '#jeciscTestSymbolFlag' with: '#jeciscTestSymbolFlagEditedByTest').
+		presenter code triggerSubmitAction.
+
+		self assert: (StFBFlagTestFixture >> #methodWithSymbolFlag) flagNodes first arguments first value equals: #jeciscTestSymbolFlagEditedByTest ] ensure: [
+		StFBFlagTestFixture compile: originalSource classified: originalProtocol ]
 ]
 
 { #category : 'tests' }

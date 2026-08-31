@@ -65,6 +65,16 @@ StFBByScopePagePresenterTest >> testRefreshPreservesSelectedKnownScope [
 ]
 
 { #category : 'tests' }
+StFBByScopePagePresenterTest >> testScopeDisplayShowsNameAndFlagCount [
+
+	| scope locationsByScope |
+	scope := presenter scopesList items detect: [ :s | s name = self knownScopeName ].
+	locationsByScope := (StFBFlag allFlags flatCollect: #locations) groupedBy: presenter scopeSelector.
+
+	self assert: (presenter scopesList display value: scope) equals: self knownScopeName , ' (' , (locationsByScope at: scope) size asString , ' flags)'
+]
+
+{ #category : 'tests' }
 StFBByScopePagePresenterTest >> testScopesListSortedByScopeName [
 
 	| names sorted |
@@ -83,4 +93,24 @@ StFBByScopePagePresenterTest >> testSelectingKnownScopeTransmitsLocations [
 
 	self denyEmpty: presenter locationsTable items.
 	self assert: (presenter locationsTable items anySatisfy: [ :location | location selector = #methodWithSymbolFlag ])
+]
+
+{ #category : 'tests' }
+StFBByScopePagePresenterTest >> testTogglingShowPharoFlagsAddsSystemPackages [
+
+	| checkbox initialSize |
+	checkbox := presenter presenterAt: #showPharoFlagsCheckbox.
+	initialSize := presenter scopesList items size.
+
+	self deny: StFBFlag showPharoFlags.
+
+	checkbox state: true.
+
+	self assert: StFBFlag showPharoFlags.
+	self assert: presenter scopesList items size > initialSize.
+
+	checkbox state: false.
+
+	self deny: StFBFlag showPharoFlags.
+	self assert: presenter scopesList items size equals: initialSize
 ]
