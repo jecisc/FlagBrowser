@@ -45,3 +45,9 @@ StFBFlagTestFixture >> methodWithTwoFlags [
 	self flag: #jeciscTestFirstFlag.
 	self flag: #jeciscTestSecondFlag
 ]
+
+{ #category : 'flags' }
+StFBFlagTestFixture >> methodWithoutFlag [
+
+	^ self
+]
