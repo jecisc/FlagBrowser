@@ -103,3 +103,8 @@ StFBByScopePagePresenter >> refresh [
 StFBByScopePagePresenter >> scopeSelector [
 	^ self subclassResponsibility
 ]
+
+{ #category : 'accessing' }
+StFBByScopePagePresenter >> scopesList [
+	^ scopesList
+]

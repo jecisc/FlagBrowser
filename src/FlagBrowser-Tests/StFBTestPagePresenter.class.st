@@ -12,6 +12,12 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'testing' }
+StFBTestPagePresenter class >> isAbstract [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StFBTestPagePresenter >> initialize [
 
