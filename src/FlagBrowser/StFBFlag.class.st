@@ -25,6 +25,7 @@ Class {
 	],
 	#classVars : [
 		'CaseSensitive',
+		'FlagsCache',
 		'ShowPharoFlags'
 	],
 	#category : 'FlagBrowser-Model',
@@ -68,35 +69,15 @@ StFBFlag class >> allFlags [
 { #category : 'accessing' }
 StFBFlag class >> allFlagsInSystem [
 
-	| flagNodes flags |
-	flags := OrderedCollection new.
-	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod flagNodes ].
-	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
-			self
-				addNew: (self flagClassFor: argument)
-				for: argument
-				with: rbNodes
-				in: flags ].
-	^ flags
+	^ FlagsCache ifNil: [ FlagsCache := self newFlagsInSystem ]
 ]
 
 { #category : 'accessing' }
 StFBFlag class >> allInSystem [
 
-	| flagNodes flags |
 	self isAbstract ifTrue: [ ^ self error: 'This method can be called only on concrete classes.' ].
 
-	flags := OrderedCollection new.
-
-	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod flagNodes ].
-	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
-			(StFBFlag flagClassFor: argument) = self ifTrue: [
-					self
-						addNew: self
-						for: argument
-						with: rbNodes
-						in: flags ] ].
-	^ flags
+	^ (StFBFlag allFlags select: [ :flag | flag class = self ]) asOrderedCollection
 ]
 
 { #category : 'accessing' }
@@ -106,12 +87,33 @@ StFBFlag class >> caseSensitive [
 
 { #category : 'accessing' }
 StFBFlag class >> caseSensitive: anObject [
-	CaseSensitive := anObject
+
+	CaseSensitive := anObject.
+	self invalidateFlagsCache
 ]
 
 { #category : 'accessing' }
 StFBFlag class >> flagClassFor: aFlagArgument [
 	^ (self allSubclasses sorted: #priority descending) detect: [ :subclass | subclass matchesArgument: aFlagArgument ]
+]
+
+{ #category : 'class initialization' }
+StFBFlag class >> initialize [
+
+	SystemAnnouncer uniqueInstance weak
+		when: MethodAdded send: #invalidateFlagsCache to: self;
+		when: MethodRemoved send: #invalidateFlagsCache to: self;
+		when: MethodModified send: #invalidateFlagsCache to: self;
+		when: ClassAdded send: #invalidateFlagsCache to: self;
+		when: ClassRemoved send: #invalidateFlagsCache to: self;
+		when: ClassRepackaged send: #invalidateFlagsCache to: self;
+		when: MethodRepackaged send: #invalidateFlagsCache to: self
+]
+
+{ #category : 'private' }
+StFBFlag class >> invalidateFlagsCache [
+
+	FlagsCache := nil
 ]
 
 { #category : 'testing' }
@@ -122,6 +124,21 @@ StFBFlag class >> isAbstract [
 { #category : 'testing' }
 StFBFlag class >> matchesArgument: aFlagArgument [
 	^ self subclassResponsibility
+]
+
+{ #category : 'private' }
+StFBFlag class >> newFlagsInSystem [
+
+	| flagNodes flags |
+	flags := OrderedCollection new.
+	flagNodes := #flag: senders flatCollect: [ :sender | sender compiledMethod flagNodes ].
+	(flagNodes groupedBy: [ :node | node arguments first value ]) keysAndValuesDo: [ :argument :rbNodes |
+			self
+				addNew: (self flagClassFor: argument)
+				for: argument
+				with: rbNodes
+				in: flags ].
+	^ flags
 ]
 
 { #category : 'instance creation' }
@@ -146,7 +163,8 @@ StFBFlag class >> showPharoFlags [
 { #category : 'accessing' }
 StFBFlag class >> showPharoFlags: aBoolean [
 
-	ShowPharoFlags := aBoolean
+	ShowPharoFlags := aBoolean.
+	self invalidateFlagsCache
 ]
 
 { #category : 'accessing' }
