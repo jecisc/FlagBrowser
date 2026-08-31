@@ -2,7 +2,7 @@
 I test how StFBPagePresenter reacts to method announcements: a page must refresh only when the announced method addition, removal or update concerns a flag.
 "
 Class {
-	#name : 'StFBPagePresenterRefreshOnAnnoucementsTest',
+	#name : 'StFBPagePresenterRefreshOnAnnouncementsTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'presenter'
@@ -13,48 +13,48 @@ Class {
 }
 
 { #category : 'helpers' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> methodWithoutFlag [
+StFBPagePresenterRefreshOnAnnouncementsTest >> methodWithoutFlag [
 
 	^ self
 ]
 
 { #category : 'running' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> setUp [
+StFBPagePresenterRefreshOnAnnouncementsTest >> setUp [
 
 	super setUp.
 	presenter := StFBTestPagePresenter new
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnAdditionDoesNotRefreshMethodWithoutFlag [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnAdditionDoesNotRefreshMethodWithoutFlag [
 
 	presenter refreshOnAddition: (MethodAdded method: StFBFlagTestFixture >> #methodWithoutFlag).
 	self assert: presenter refreshCount equals: 0
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnAdditionRefreshesMethodWithFlag [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnAdditionRefreshesMethodWithFlag [
 
 	presenter refreshOnAddition: (MethodAdded method: StFBFlagTestFixture >> #methodWithSymbolFlag).
 	self assert: presenter refreshCount equals: 1
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnRemovalDoesNotRefreshMethodWithoutFlag [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnRemovalDoesNotRefreshMethodWithoutFlag [
 
 	presenter refreshOnRemoval: (MethodRemoved new method: StFBFlagTestFixture >> #methodWithoutFlag).
 	self assert: presenter refreshCount equals: 0
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnRemovalRefreshesMethodWithFlag [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnRemovalRefreshesMethodWithFlag [
 
 	presenter refreshOnRemoval: (MethodRemoved new method: StFBFlagTestFixture >> #methodWithTwoFlags).
 	self assert: presenter refreshCount equals: 1
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnUpdateDoesNotRefreshWhenFlagsUnchanged [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnUpdateDoesNotRefreshWhenFlagsUnchanged [
 
 	presenter refreshOnUpdate:
 		(MethodModified methodChangedFrom: StFBFlagTestFixture >> #methodWithSymbolFlag to: StFBFlagTestFixture >> #methodWithSymbolFlag oldProtocol: nil).
@@ -62,7 +62,7 @@ StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnUpdateDoesNotRefreshW
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnUpdateRefreshesWhenFlagAdded [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnUpdateRefreshesWhenFlagAdded [
 
 	presenter refreshOnUpdate:
 		(MethodModified methodChangedFrom: StFBFlagTestFixture >> #methodWithoutFlag to: StFBFlagTestFixture >> #methodWithSymbolFlag oldProtocol: nil).
@@ -70,7 +70,7 @@ StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnUpdateRefreshesWhenFl
 ]
 
 { #category : 'tests' }
-StFBPagePresenterRefreshOnAnnoucementsTest >> testRefreshOnUpdateRefreshesWhenFlagRemoved [
+StFBPagePresenterRefreshOnAnnouncementsTest >> testRefreshOnUpdateRefreshesWhenFlagRemoved [
 
 	presenter refreshOnUpdate:
 		(MethodModified methodChangedFrom: StFBFlagTestFixture >> #methodWithSymbolFlag to: StFBFlagTestFixture >> #methodWithoutFlag oldProtocol: nil).
